@@ -113,12 +113,6 @@
   </button>
 </div>
 
-<!-- Bottom Navigation -->
-<div class="bottom-nav">
-  <i class="bi bi-grid-3x3-gap active"></i>
-  <i class="bi bi-star"></i>
-  <i class="bi bi-clipboard-check"></i>
-</div>
 @endsection
 
 @section('css')
@@ -1006,7 +1000,6 @@
   background: #ca1f1f !important;
 }
 
-/* Red color specifically for stove products with quantity */
 .add-btn.has-quantity.stove-product {
   background: #ca1f1f !important;
 }
@@ -1027,7 +1020,6 @@
   border-radius: 50%;
 }
 
-/* Enhanced button animations for quantity state */
 .add-btn {
   transition: all 0.2s ease, background-color 0.3s ease;
 }
@@ -1156,7 +1148,6 @@
 @section('js')
 
 <script>
-  // Corrected Category Dropdown JavaScript
 document.addEventListener('DOMContentLoaded', function() {
   const categoryDropdown = document.getElementById('categoryDropdown');
   const categoryDropdownMenu = document.getElementById('categoryDropdownMenu');
@@ -1203,10 +1194,8 @@ document.addEventListener('DOMContentLoaded', function() {
     return products;
   }
 
-  // Build the products array
   const products = buildProductsArray();
 
-  // Toggle dropdown
   categoryDropdown.addEventListener('click', function(e) {
     e.preventDefault();
     e.stopPropagation();
@@ -1215,12 +1204,10 @@ document.addEventListener('DOMContentLoaded', function() {
     
     const isCurrentlyOpen = categoryDropdownMenu.classList.contains('show');
     
-    // Close all other dropdowns first
     document.querySelectorAll('.dropdown-menu.show').forEach(menu => {
       menu.classList.remove('show');
     });
     
-    // Toggle current dropdown
     if (!isCurrentlyOpen) {
       categoryDropdownMenu.classList.add('show');
       console.log('Dropdown opened');
@@ -1229,14 +1216,12 @@ document.addEventListener('DOMContentLoaded', function() {
     }
   });
 
-  // Close dropdown when clicking outside
   document.addEventListener('click', function(e) {
     if (!categoryDropdown.contains(e.target) && !categoryDropdownMenu.contains(e.target)) {
       categoryDropdownMenu.classList.remove('show');
     }
   });
 
-  // Handle category filter clicks
   categoryFilters.forEach(filter => {
     filter.addEventListener('click', function(e) {
       e.preventDefault();
@@ -1247,17 +1232,13 @@ document.addEventListener('DOMContentLoaded', function() {
       
       console.log('Category selected:', selectedCategory, categoryText);
       
-      // Update dropdown text
       selectedCategorySpan.textContent = categoryText;
       
-      // Update active state
       categoryFilters.forEach(f => f.classList.remove('active'));
       this.classList.add('active');
       
-      // Close dropdown
       categoryDropdownMenu.classList.remove('show');
       
-      // Filter products
       filterProducts(selectedCategory);
     });
   });
@@ -1471,11 +1452,12 @@ document.addEventListener('DOMContentLoaded', function() {
 
 <script>
  document.addEventListener('DOMContentLoaded', function() {
+  // Get all the buttons and cart elements
   const addButtons = document.querySelectorAll('.add-btn');
   const totalItems = document.getElementById('total-items');
   const totalAmount = document.getElementById('total-amount');
   
-  // Create overlay if it doesn't exist
+  // Make sure overlay exists
   let expansionOverlay = document.getElementById('expansionOverlay');
   if (!expansionOverlay) {
     expansionOverlay = document.createElement('div');
@@ -1484,21 +1466,22 @@ document.addEventListener('DOMContentLoaded', function() {
     document.body.appendChild(expansionOverlay);
   }
 
-  // Cart state
+  // Cart variables
   let cart = {
     items: 0,
     amount: 0,
     products: []
   };
 
-  const buttonQuantities = new Map(); // button -> quantity
-  const buttonToProduct = new Map();  // button -> product data
-  const stoveColorQuantities = new Map(); // button -> {color: quantity}
+  // Track button states
+  const buttonQuantities = new Map();
+  const buttonToProduct = new Map();
+  const stoveColorQuantities = new Map();
 
   let currentExpansion = null;
   const availableColors = ['yellow', 'blue', 'red', 'white', 'choco', 'green'];
 
-  // Initialize with proper button references
+  // First, set up all the buttons with their product data
   addButtons.forEach((button, index) => {
     const productName = button.getAttribute('data-name');
     const productId = `btn-${index}-${Date.now()}`;
@@ -1512,6 +1495,7 @@ document.addEventListener('DOMContentLoaded', function() {
     
     buttonQuantities.set(button, 0);
     
+    // For stove products, set up color tracking
     if (productName.toLowerCase().includes('stove')) {
       const colorMap = {};
       availableColors.forEach(color => {
@@ -1523,22 +1507,26 @@ document.addEventListener('DOMContentLoaded', function() {
     updateButtonDisplay(button, 0);
   });
 
-  // Add button functionality
+  // Load saved cart data when page starts
+  loadSavedCart();
+
+  // Set up button click handlers
   addButtons.forEach(button => {
     button.addEventListener('click', function() {
       const productData = buttonToProduct.get(this);
       if (!productData) return;
 
-      const { name, price, image, containerId } = productData;
+      const { name, price, image } = productData;
 
       if (name.toLowerCase().includes('stove')) {
         if (currentExpansion) closeExpansion();
-        showDynamicExpansion(this, name, price, image, 'stove');
+        showStoveModal(this, name, price, image);
       } else {
         if (currentExpansion) closeExpansion();
         showQuantityModal(this, name, price, image);
       }
 
+      // Button click animation
       this.style.transform = 'scale(0.9)';
       setTimeout(() => {
         this.style.transform = 'scale(1)';
@@ -1546,10 +1534,82 @@ document.addEventListener('DOMContentLoaded', function() {
     });
   });
 
-  // Create quantity modal for regular products
+  // Load cart data from localStorage
+  function loadSavedCart() {
+    try {
+      // Check for saved cart data
+      const savedProducts = localStorage.getItem('dealerCartData');
+      const savedItems = localStorage.getItem('dealerCartItems');
+      const savedTotal = localStorage.getItem('dealerCartTotal');
+      
+      if (savedProducts) {
+        cart.products = JSON.parse(savedProducts);
+        cart.items = parseInt(savedItems) || 0;
+        cart.amount = parseFloat(savedTotal) || 0;
+        
+        console.log('Found saved cart:', cart);
+        
+        // Update button displays based on saved data
+        updateButtonsFromSavedData();
+        
+        // Update the cart summary
+        updateCartDisplay();
+      }
+    } catch (error) {
+      console.error('Error loading saved cart:', error);
+      // If there's an error, just start fresh
+      cart = { items: 0, amount: 0, products: [] };
+    }
+  }
+
+  // Update buttons to show quantities from saved cart
+  function updateButtonsFromSavedData() {
+    // Go through each button and check if we have saved data for it
+    addButtons.forEach((button, buttonIndex) => {
+      const productData = buttonToProduct.get(button);
+      if (!productData) return;
+      
+      // Find products in cart that match this button
+      const matchingProducts = cart.products.filter(product => {
+        return (product.originalName === productData.name || product.name.includes(productData.name)) 
+               && (product.buttonId === buttonIndex || !product.buttonId);
+      });
+      
+      if (matchingProducts.length > 0) {
+        let totalQuantity = 0;
+        
+        // Handle stove products differently
+        if (productData.name.toLowerCase().includes('stove')) {
+          const colorMap = {};
+          availableColors.forEach(color => colorMap[color] = 0);
+          
+          // Add up quantities by color
+          matchingProducts.forEach(product => {
+            if (product.color) {
+              colorMap[product.color] = (colorMap[product.color] || 0) + product.quantity;
+              totalQuantity += product.quantity;
+            } else {
+              totalQuantity += product.quantity;
+            }
+          });
+          
+          stoveColorQuantities.set(button, colorMap);
+        } else {
+          // Regular products - just add up all quantities
+          totalQuantity = matchingProducts.reduce((sum, product) => sum + product.quantity, 0);
+        }
+        
+        buttonQuantities.set(button, totalQuantity);
+        updateButtonDisplay(button, totalQuantity);
+      }
+    });
+  }
+
+  // Show quantity modal for regular products
   function showQuantityModal(button, productName, price, productImage) {
     const currentQuantity = buttonQuantities.get(button) || 0;
     
+    // Remove any existing modal
     const existingModal = document.querySelector('.quantity-modal');
     if (existingModal) {
       existingModal.remove();
@@ -1605,11 +1665,11 @@ document.addEventListener('DOMContentLoaded', function() {
     modal.classList.add('active');
     document.body.style.overflow = 'hidden';
     
-    setupQuantityModalListeners(modal, price, button);
+    setupQuantityModalEvents(modal, price, button);
   }
 
-  // Setup quantity modal listeners for regular products
-  function setupQuantityModalListeners(modal, basePrice, button) {
+  // Set up events for quantity modal
+  function setupQuantityModalEvents(modal, basePrice, button) {
     const quantityInput = modal.querySelector('.quantity-input');
     const totalPrice = modal.querySelector('.expansion-total-price');
     const confirmBtn = modal.querySelector('.confirm-btn');
@@ -1618,24 +1678,28 @@ document.addEventListener('DOMContentLoaded', function() {
     const plusBtn = modal.querySelector('.plus-btn');
     const minusBtn = modal.querySelector('.minus-btn');
 
+    // Update total when quantity changes
     function updateTotal() {
       const quantity = parseInt(quantityInput.value) || 0;
       const total = basePrice * quantity;
       totalPrice.textContent = `₱ ${total.toFixed(2)}`;
     }
 
+    // Plus button
     plusBtn.addEventListener('click', () => {
       const currentValue = parseInt(quantityInput.value) || 0;
       quantityInput.value = Math.min(currentValue + 1, 999);
       updateTotal();
     });
 
+    // Minus button
     minusBtn.addEventListener('click', () => {
       const currentValue = parseInt(quantityInput.value) || 0;
       quantityInput.value = Math.max(currentValue - 1, 0);
       updateTotal();
     });
 
+    // Input change
     quantityInput.addEventListener('input', () => {
       let value = parseInt(quantityInput.value) || 0;
       value = Math.max(0, Math.min(value, 999));
@@ -1643,6 +1707,7 @@ document.addEventListener('DOMContentLoaded', function() {
       updateTotal();
     });
 
+    // Confirm button
     confirmBtn.addEventListener('click', () => {
       const quantity = parseInt(quantityInput.value) || 0;
       const productData = buttonToProduct.get(button);
@@ -1652,55 +1717,26 @@ document.addEventListener('DOMContentLoaded', function() {
       const oldQuantity = buttonQuantities.get(button) || 0;
       buttonQuantities.set(button, quantity);
       
-      updateCartQuantity(productData, button, oldQuantity, quantity);
+      // Update the cart
+      updateRegularProductCart(productData, button, oldQuantity, quantity);
       updateButtonDisplay(button, quantity);
       
       closeExpansion();
     });
 
+    // Cancel and close buttons
     cancelBtn.addEventListener('click', closeExpansion);
     closeBtn.addEventListener('click', closeExpansion);
   }
 
-  // FIXED: Create stove expansion with proper quantity calculation
-  function showDynamicExpansion(button, productName, price, productImage, type) {
+  // Show stove modal with color options
+  function showStoveModal(button, productName, price, productImage) {
+    // Remove any existing modal
     const existingModal = document.querySelector('.dynamic-color-modal');
     if (existingModal) {
       existingModal.remove();
     }
 
-    const modalHTML = createColorModalHTML(productName, price, productImage);
-    document.body.insertAdjacentHTML('beforeend', modalHTML);
-    
-    const modal = document.querySelector('.dynamic-color-modal');
-    currentExpansion = modal;
-    
-    loadExistingColorQuantities(modal, button);
-    
-    expansionOverlay.classList.add('active');
-    modal.classList.add('active');
-    document.body.style.overflow = 'hidden';
-    
-    setupDynamicModalListeners(modal, price, button);
-  }
-
-  // Load existing color quantities for stoves
-  function loadExistingColorQuantities(modal, button) {
-    const colorQuantities = stoveColorQuantities.get(button) || {};
-    const quantityInputs = modal.querySelectorAll('.color-quantity-input');
-    
-    quantityInputs.forEach(input => {
-      const color = input.getAttribute('data-color');
-      const existingQuantity = colorQuantities[color] || 0;
-      input.value = existingQuantity;
-    });
-    
-    const price = parseFloat(modal.dataset.productPrice);
-    updateModalTotal(modal, price);
-  }
-
-  // Create color modal HTML for stoves
-  function createColorModalHTML(productName, price, productImage) {
     const colorOptionsHTML = availableColors.map(color => `
       <div class="color-option-row">
         <span class="color-label">${color.charAt(0).toUpperCase() + color.slice(1)}</span>
@@ -1711,7 +1747,7 @@ document.addEventListener('DOMContentLoaded', function() {
       </div>
     `).join('');
 
-    return `
+    const modalHTML = `
       <div class="color-selection-expansion dynamic-color-modal" data-product-name="${productName}" data-product-price="${price}" data-product-image="${productImage}">
         <div class="expansion-header">
           <h4 class="expansion-title">Choose Color & Quantity</h4>
@@ -1732,48 +1768,78 @@ document.addEventListener('DOMContentLoaded', function() {
         <button class="add-to-cart-expansion" disabled>Confirm</button>
       </div>
     `;
+
+    document.body.insertAdjacentHTML('beforeend', modalHTML);
+    
+    const modal = document.querySelector('.dynamic-color-modal');
+    currentExpansion = modal;
+    
+    // Load existing color quantities for this button
+    loadColorQuantitiesInModal(modal, button);
+    
+    expansionOverlay.classList.add('active');
+    modal.classList.add('active');
+    document.body.style.overflow = 'hidden';
+    
+    setupStoveModalEvents(modal, price, button);
   }
 
-  // FIXED: Setup stove modal listeners with proper quantity tracking
-  function setupDynamicModalListeners(modal, basePrice, button) {
+  // Load saved color quantities into the modal
+  function loadColorQuantitiesInModal(modal, button) {
+    const colorQuantities = stoveColorQuantities.get(button) || {};
     const quantityInputs = modal.querySelectorAll('.color-quantity-input');
-    const totalPrice = modal.querySelector('.expansion-total-price');
+    
+    quantityInputs.forEach(input => {
+      const color = input.getAttribute('data-color');
+      const existingQuantity = colorQuantities[color] || 0;
+      input.value = existingQuantity;
+    });
+    
+    const price = parseFloat(modal.dataset.productPrice);
+    updateStoveModalTotal(modal, price);
+  }
+
+  // Set up events for stove modal
+  function setupStoveModalEvents(modal, basePrice, button) {
+    const quantityInputs = modal.querySelectorAll('.color-quantity-input');
     const addToCartBtn = modal.querySelector('.add-to-cart-expansion');
     const closeBtn = modal.querySelector('.close-expansion');
     
+    // Handle input changes
     quantityInputs.forEach(input => {
       input.addEventListener('input', function() {
         if (parseInt(this.value) < 0) {
           this.value = 0;
         }
-        updateModalTotal(modal, basePrice);
+        updateStoveModalTotal(modal, basePrice);
       });
 
       input.addEventListener('blur', function() {
         if (this.value === '' || isNaN(parseInt(this.value))) {
           this.value = 0;
         }
-        updateModalTotal(modal, basePrice);
+        updateStoveModalTotal(modal, basePrice);
       });
     });
     
+    // Confirm button
     addToCartBtn.addEventListener('click', function() {
       const productData = buttonToProduct.get(button);
       if (!productData) return;
       
-      // FIXED: Save color quantities and calculate total properly
-      saveColorQuantities(modal, button);
+      // Save the color quantities
+      saveColorQuantitiesFromModal(modal, button);
       
-      // Calculate new total quantity from color quantities
+      // Calculate totals
       const colorQuantities = stoveColorQuantities.get(button) || {};
       const newTotalQuantity = Object.values(colorQuantities).reduce((sum, qty) => sum + qty, 0);
       const oldTotalQuantity = buttonQuantities.get(button) || 0;
       
-      // Update button quantity to match actual total
+      // Update button quantity
       buttonQuantities.set(button, newTotalQuantity);
       
-      // Update cart with the difference
-      updateCartQuantityForStove(productData, button, oldTotalQuantity, newTotalQuantity, colorQuantities);
+      // Update the cart
+      updateStoveProductCart(productData, button, oldTotalQuantity, newTotalQuantity, colorQuantities);
       
       // Update button display
       updateButtonDisplay(button, newTotalQuantity);
@@ -1781,10 +1847,11 @@ document.addEventListener('DOMContentLoaded', function() {
       closeExpansion();
     });
     
+    // Close button
     closeBtn.addEventListener('click', () => {
-      saveColorQuantities(modal, button);
+      saveColorQuantitiesFromModal(modal, button);
       
-      // Update button display when closing without confirming
+      // Update button display when closing
       const colorQuantities = stoveColorQuantities.get(button) || {};
       const totalQuantity = Object.values(colorQuantities).reduce((sum, qty) => sum + qty, 0);
       buttonQuantities.set(button, totalQuantity);
@@ -1794,8 +1861,8 @@ document.addEventListener('DOMContentLoaded', function() {
     });
   }
 
-  // Save color quantities for stoves
-  function saveColorQuantities(modal, button) {
+  // Save color quantities from modal inputs
+  function saveColorQuantitiesFromModal(modal, button) {
     const quantityInputs = modal.querySelectorAll('.color-quantity-input');
     const colorQuantities = stoveColorQuantities.get(button) || {};
     
@@ -1808,20 +1875,77 @@ document.addEventListener('DOMContentLoaded', function() {
     stoveColorQuantities.set(button, colorQuantities);
   }
 
-  // FIXED: New function to handle stove cart updates
-  function updateCartQuantityForStove(productData, button, oldTotalQuantity, newTotalQuantity, colorQuantities) {
+  // Update stove modal total
+  function updateStoveModalTotal(modal, basePrice) {
+    const quantityInputs = modal.querySelectorAll('.color-quantity-input');
+    const totalPrice = modal.querySelector('.expansion-total-price');
+    const addToCartBtn = modal.querySelector('.add-to-cart-expansion');
+    
+    let totalQuantity = 0;
+    
+    quantityInputs.forEach(input => {
+      const quantity = parseInt(input.value) || 0;
+      totalQuantity += quantity;
+    });
+    
+    const total = basePrice * totalQuantity;
+    totalPrice.textContent = `₱ ${total.toFixed(2)}`;
+    addToCartBtn.disabled = totalQuantity === 0;
+  }
+
+  // Update cart for regular products
+  function updateRegularProductCart(productData, button, oldQuantity, newQuantity) {
+    const quantityDiff = newQuantity - oldQuantity;
+    const priceDiff = productData.price * quantityDiff;
+    
+    cart.items += quantityDiff;
+    cart.amount += priceDiff;
+    
     const buttonId = Array.from(addButtons).indexOf(button);
     
-    // Remove all existing stove products for this button from cart
+    // Find existing product in cart
+    const existingProductIndex = cart.products.findIndex(p => 
+      p.name === productData.name && p.buttonId === buttonId
+    );
+    
+    if (newQuantity === 0) {
+      // Remove from cart if quantity is 0
+      if (existingProductIndex !== -1) {
+        cart.products.splice(existingProductIndex, 1);
+      }
+    } else if (existingProductIndex !== -1) {
+      // Update existing product
+      cart.products[existingProductIndex].quantity = newQuantity;
+    } else {
+      // Add new product
+      cart.products.push({
+        id: Date.now() + Math.random(),
+        name: productData.name,
+        price: productData.price,
+        quantity: newQuantity,
+        image: productData.image,
+        buttonId: buttonId
+      });
+    }
+    
+    updateCartDisplay();
+    saveCartToLocalStorage();
+  }
+
+  // Update cart for stove products
+  function updateStoveProductCart(productData, button, oldTotalQuantity, newTotalQuantity, colorQuantities) {
+    const buttonId = Array.from(addButtons).indexOf(button);
+    
+    // Remove all existing stove products for this button
     cart.products = cart.products.filter(p => 
       !(p.originalName === productData.name && p.buttonId === buttonId)
     );
     
-    // Subtract old quantities from cart totals
+    // Update totals
     cart.items -= oldTotalQuantity;
     cart.amount -= (productData.price * oldTotalQuantity);
     
-    // Add new quantities to cart
+    // Add new color products
     Object.entries(colorQuantities).forEach(([color, quantity]) => {
       if (quantity > 0) {
         const productIdentifier = `${productData.name} (${color})`;
@@ -1841,28 +1965,11 @@ document.addEventListener('DOMContentLoaded', function() {
       }
     });
     
-    updateCartSummary();
+    updateCartDisplay();
+    saveCartToLocalStorage();
   }
 
-  // Update modal total for stoves
-  function updateModalTotal(modal, basePrice) {
-    const quantityInputs = modal.querySelectorAll('.color-quantity-input');
-    const totalPrice = modal.querySelector('.expansion-total-price');
-    const addToCartBtn = modal.querySelector('.add-to-cart-expansion');
-    
-    let totalQuantity = 0;
-    
-    quantityInputs.forEach(input => {
-      const quantity = parseInt(input.value) || 0;
-      totalQuantity += quantity;
-    });
-    
-    const total = basePrice * totalQuantity;
-    totalPrice.textContent = `₱ ${total.toFixed(2)}`;
-    addToCartBtn.disabled = totalQuantity === 0;
-  }
-
-  // Update button display
+  // Update button appearance
   function updateButtonDisplay(button, quantity) {
     const productData = buttonToProduct.get(button);
     const isStove = productData && productData.name.toLowerCase().includes('stove');
@@ -1880,47 +1987,31 @@ document.addEventListener('DOMContentLoaded', function() {
     }
   }
 
-  // Update cart quantity for regular products
-  function updateCartQuantity(productData, button, oldQuantity, newQuantity) {
-    const quantityDiff = newQuantity - oldQuantity;
-    const priceDiff = productData.price * quantityDiff;
-    
-    cart.items += quantityDiff;
-    cart.amount += priceDiff;
-    
-    const buttonId = Array.from(addButtons).indexOf(button);
-    
-    const existingProductIndex = cart.products.findIndex(p => 
-      p.name === productData.name && p.buttonId === buttonId
-    );
-    
-    if (newQuantity === 0) {
-      if (existingProductIndex !== -1) {
-        cart.products.splice(existingProductIndex, 1);
-      }
-    } else if (existingProductIndex !== -1) {
-      cart.products[existingProductIndex].quantity = newQuantity;
-    } else {
-      cart.products.push({
-        id: Date.now() + Math.random(),
-        name: productData.name,
-        price: productData.price,
-        quantity: newQuantity,
-        image: productData.image,
-        buttonId: buttonId
-      });
-    }
-    
-    updateCartSummary();
-  }
-
-  // Update cart summary display
-  function updateCartSummary() {
+  // Update cart display
+  function updateCartDisplay() {
     totalItems.innerHTML = `<i class="bi bi-cart-fill"></i> ${cart.items} Items`;
     totalAmount.innerText = `Total: ₱ ${cart.amount.toFixed(2)}`;
   }
 
-  // Close expansion function
+  // Save cart to localStorage
+  function saveCartToLocalStorage() {
+    try {
+      localStorage.setItem('dealerCartData', JSON.stringify(cart.products));
+      localStorage.setItem('dealerCartTotal', cart.amount.toFixed(2));
+      localStorage.setItem('dealerCartItems', cart.items.toString());
+      
+      // Keep old keys for compatibility
+      localStorage.setItem('cartData', JSON.stringify(cart.products));
+      localStorage.setItem('cartTotal', cart.amount.toFixed(2));
+      localStorage.setItem('cartItems', cart.items.toString());
+      
+      console.log('Cart saved to localStorage');
+    } catch (error) {
+      console.error('Error saving cart:', error);
+    }
+  }
+
+  // Close modal
   function closeExpansion() {
     if (currentExpansion) {
       currentExpansion.classList.remove('active');
@@ -1950,7 +2041,7 @@ document.addEventListener('DOMContentLoaded', function() {
     }
   });
 
-  // Cart button click handler
+  // Checkout button
   const checkoutBar = document.getElementById('checkoutBar');
   if (checkoutBar) {
     checkoutBar.addEventListener('click', function() {
@@ -1959,11 +2050,30 @@ document.addEventListener('DOMContentLoaded', function() {
         return;
       }
 
+      // Prepare data for checkout
+      const dealerCartData = cart.products.map((product, index) => ({
+        id: product.id || `product-${index}-${Date.now()}`,
+        name: product.name,
+        originalName: product.originalName || product.name,
+        price: parseFloat(product.price),
+        quantity: parseInt(product.quantity),
+        image: product.image,
+        color: product.color || null,
+        buttonId: product.buttonId || null
+      }));
+
+      // Save checkout data
+      localStorage.setItem('dealerCartData', JSON.stringify(dealerCartData));
+      localStorage.setItem('dealerCartTotal', cart.amount.toFixed(2));
+      localStorage.setItem('dealerCartItems', cart.items.toString());
+      
       localStorage.setItem('cartData', JSON.stringify(cart.products));
       localStorage.setItem('cartTotal', cart.amount.toFixed(2));
       localStorage.setItem('cartItems', cart.items.toString());
       
-      // Navigate to place_order
+      console.log('Going to checkout with:', dealerCartData);
+      
+      // Go to place order page
       window.location.href = "{{ route('place-order') }}";
     });
   }

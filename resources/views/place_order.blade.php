@@ -1,3 +1,4 @@
+<!-- place_order blade -->
 @extends('layouts.header')
 @section('content')
 <div class="place-order-page">
@@ -9,8 +10,8 @@
       <h1 class="page-title">Order Summary</h1>
     </div>
 
-    <div class="client-header" onclick="openClientModal()">
-      <h2 class="client-title">Client</h2>
+    <div class="client-header" onclick="window.location.href='{{ route('merchants') }}'">
+      <h2 class="client-title">Merchants</h2>
       <i class="bi bi-chevron-right client-arrow"></i>
     </div>
     
@@ -18,7 +19,7 @@
       <div class="client-content">
         <div class="assigned-ads-card">
           <div class="ads-icon">
-            <img src="images/riders.png">
+            <img class="rider" src="{{ asset('images/riders.png') }}" alt="Rider">
           </div>
           <div class="ads-info">
             <div class="ads-label">Assigned ADS</div>
@@ -70,10 +71,10 @@
 
     <div class="cart-section">
       <div class="section-header">
-        <i class="bi bi-cart-fill"></i> Cart Items
+        <span><i class="bi bi-cart-fill"></i> Cart Items</span>
+        <a href="{{ url('products') }}" class="add-more">+ Add More</a>
       </div>
-      <div id="cart-items">
-      </div>
+      <div id="cart-items"></div>
     </div>
 
     <div class="cart-section">
@@ -82,6 +83,10 @@
       </div>
       <div class="summary-row">
         <span class="summary-label">Subtotal:</span>
+        <span class="summary-value" id="subtotal">₱ 0.00</span>
+      </div>
+      <div class="summary-row">
+        <span class="summary-label">Discount:</span>
         <span class="summary-value" id="subtotal">₱ 0.00</span>
       </div>
       <div class="summary-row total">
@@ -124,86 +129,6 @@
   </div>
 </div>
 
-<div class="modal-overlay" id="clientSelectionModal">
-  <div class="modal-content">
-    <div class="modal-header">
-      <h2 class="modal-title">Clients</h2>
-      <button class="modal-close" onclick="closeClientSelectionModal()">
-        <i class="bi bi-x"></i>
-      </button>
-    </div>
-    <div class="modal-body">
-      <div class="search-section">
-        <div class="search-container">
-          <i class="bi bi-search search-icon"></i>
-          <input type="text" class="search-input" placeholder="Search name" id="clientSearchInput">
-        </div>
-      </div>
-      
-      <div class="client-list" id="clientList">
-        <div class="client-item" onclick="selectClient('MJ', 'MJ')">
-          <div class="client-avatar">MJ</div>
-          <div class="client-info">
-            <div class="client-name">MJ</div>
-          </div>
-          <i class="bi bi-chevron-right client-arrow"></i>
-        </div>
-        
-        <div class="client-item" onclick="selectClient('Andrea', 'Andrea')">
-          <div class="client-avatar">A</div>
-          <div class="client-info">
-            <div class="client-name">Andrea</div>
-          </div>
-          <i class="bi bi-chevron-right client-arrow"></i>
-        </div>
-      </div>
-      
-      <div class="add-customer-section">
-        <button class="add-customer-btn" onclick="addNewCustomer()">
-          Add New Customer
-        </button>
-      </div>
-    </div>
-  </div>
-</div>
-
-<div class="modal-overlay" id="addCustomerModal">
-  <div class="modal-content">
-    <div class="modal-header">
-      <h2 class="modal-title">Add Customer</h2>
-      <button class="modal-close" onclick="closeAddCustomerModal()">
-        <i class="bi bi-x"></i>
-      </button>
-    </div>
-    <div class="modal-body">
-      <form id="addCustomerForm">
-        <div class="form-group">
-          <label class="form-label">Name</label>
-          <input type="text" class="form-control" id="customerName" placeholder="Example : Jean Moussa" required>
-        </div>
-        
-        <div class="form-group">
-          <label class="form-label">Number</label>
-          <input type="tel" class="form-control" id="customerNumber" placeholder="Example : +224 654121212" required>
-        </div>
-        
-        <div class="form-group">
-          <label class="form-label">Email</label>
-          <input type="email" class="form-control" id="customerEmail" placeholder="Example: email@email.com">
-        </div>
-        
-        <div class="form-group">
-          <label class="form-label">Address</label>
-          <textarea class="form-control address-textarea" id="customerAddress" placeholder="Example: N3, Metro Manila" rows="4"></textarea>
-        </div>
-        
-        <button type="submit" class="save-customer-btn">
-          Save Customer
-        </button>
-      </form>
-    </div>
-  </div>
-</div>
 @endsection
 
 @section('css')
@@ -213,6 +138,16 @@
       gap: 15px;
       align-items: center;
     }
+
+    .page-title {
+      font-size: 20px;
+      font-weight: 600;
+      color: #4A90E2;
+      margin: 0;
+      position: absolute;
+      left: 50%;
+      transform: translateX(-50%);
+    }   
 
     .header-icons i {
       font-size: 18px;
@@ -285,9 +220,9 @@
         flex-shrink: 0;
     }
 
-    .ads-icon img {
-      width: 100px;
-      height: 100px;
+    .rider {
+        height: 100px;
+        width: 100px;
     }
 
     .ads-info {
@@ -333,12 +268,26 @@
     }
 
     .section-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center; 
       padding: 20px;
       border-bottom: 1px solid #f0f0f0;
       font-size: 18px;
       font-weight: 600;
       color: #333;
       font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+    }
+
+    .add-more {
+      font-size: 14px;
+      color: #007bff;
+      text-decoration: none;
+      cursor: pointer;
+    }
+
+    .add-more:hover {
+      text-decoration: underline;
     }
 
     .swipe-container {
@@ -631,14 +580,14 @@
     .payment-icon {
       width: 40px;
       height: 40px;
-      background: #f0f0f0;
+      background: #28a745;
       border-radius: 8px;
       display: flex;
       align-items: center;
       justify-content: center;
       margin-right: 15px;
       font-size: 18px;
-      color: #666;
+      color: #ffffffff;
       flex-shrink: 0;
     }
 
@@ -813,7 +762,7 @@
         background: rgba(0, 0, 0, 0.5);
         display: flex;
         align-items: flex-end;
-        z-index: 2000;
+        z-index: 9999 !important;
         opacity: 0;
         visibility: hidden;
         transition: all 0.3s ease;
@@ -1167,23 +1116,6 @@
       box-shadow: none;
     }
 
-    /* Responsive adjustments */
-    @media (max-width: 480px) {
-      #addCustomerModal .modal-body {
-        padding: 20px;
-      }
-      
-      #addCustomerModal .form-control {
-        padding: 12px;
-        font-size: 15px;
-      }
-      
-      #addCustomerModal .form-label {
-        font-size: 15px;
-      }
-    }
-
-    /* Responsive adjustments */
     @media (max-width: 480px) {
       .cart-section {
         margin: 10px;
@@ -1253,19 +1185,24 @@
 @section('javascript')
 <script>
     document.addEventListener('DOMContentLoaded', function() {
-        let cartData = [];
+        let dealerCartData = [];
         
         try {
-            const storedCartData = localStorage.getItem('cartData');
-            if (storedCartData) {
-                cartData = JSON.parse(storedCartData);
-                console.log('Parsed cartData:', cartData);
+            const migratedData = migrateLegacyCartData();
+            if (migratedData) {
+                dealerCartData = migratedData;
             } else {
-                console.log('No cartData found in localStorage');
+                const storedDealerCartData = localStorage.getItem('dealerCartData');
+                if (storedDealerCartData) {
+                    dealerCartData = JSON.parse(storedDealerCartData);
+                    console.log('Parsed dealerCartData:', dealerCartData);
+                } else {
+                    console.log('No dealerCartData found in localStorage');
+                }
             }
         } catch (error) {
-            console.error('Error loading cart data:', error);
-            cartData = [];
+            console.error('Error loading dealer cart data:', error);
+            dealerCartData = [];
         }
 
         let isSwipeActive = false;
@@ -1506,20 +1443,53 @@
             resetAllSwipes();
             setTimeout(() => input.select(), 50);
         };
-
+        
+        // Updating the existing updateItemQuantity
         function updateItemQuantity(itemId, newQuantity) {
-            const item = cartData.find(item => item.id == itemId);
+            const item = dealerCartData.find(item => item.id == itemId);
             if (item) {
                 item.quantity = newQuantity;
-                localStorage.setItem('cartData', JSON.stringify(cartData));
+                localStorage.setItem('dealerCartData', JSON.stringify(dealerCartData));
+                
+                // Also update cartData for compatibility
+                localStorage.setItem('cartData', JSON.stringify(dealerCartData));
+                
                 updateCartStats();
                 updateOrderSummary();
                 updateQuantityDisplays();
             }
+        } 
+
+        function migrateLegacyCartData() {
+            // Check if we have old cartData but no dealerCartData
+            if (!localStorage.getItem('dealerCartData') && localStorage.getItem('cartData')) {
+                try {
+                    const legacyData = JSON.parse(localStorage.getItem('cartData'));
+                    const migratedData = legacyData.map((item, index) => ({
+                        id: item.id || `migrated-${index}-${Date.now()}`,
+                        name: item.name,
+                        originalName: item.originalName || item.name,
+                        price: parseFloat(item.price),
+                        quantity: parseInt(item.quantity),
+                        image: item.image,
+                        color: item.color || null,
+                        buttonId: item.buttonId || null
+                    }));
+                    
+                    localStorage.setItem('dealerCartData', JSON.stringify(migratedData));
+                    console.log('Migrated legacy cart data:', migratedData);
+                    
+                    return migratedData;
+                } catch (error) {
+                    console.error('Error migrating legacy cart data:', error);
+                    return [];
+                }
+            }
+            return null;
         }
 
         function updateQuantityDisplays() {
-            cartData.forEach(item => {
+            dealerCartData.forEach(item => {
                 const input = document.querySelector(`.qty-input[data-id="${item.id}"]`);
                 if (input && input !== document.activeElement) {
                     input.value = item.quantity;
@@ -1530,13 +1500,13 @@
         function renderCartItems() {
             const cartItemsContainer = document.getElementById('cart-items');
             
-            if (cartData.length === 0) {
+            if (dealerCartData.length === 0) {
                 cartItemsContainer.innerHTML = `
                     <div class="empty-cart">
                         <i class="bi bi-cart-x"></i>
                         <h3>Your cart is empty</h3>
                         <p>Add some items to your cart to continue</p>
-                        <button class="continue-shopping-btn" onclick="window.history.back()">
+                        <button class="continue-shopping-btn" onclick="window.location.href='{{ route('home')}}'">
                             Continue Shopping
                         </button>
                     </div>
@@ -1546,7 +1516,7 @@
             }
 
             let cartHTML = '';
-            cartData.forEach(item => {
+            dealerCartData.forEach(item => {
                 let colorIndicatorHTML = '';
                 if (item.color) {
                     colorIndicatorHTML = `
@@ -1628,40 +1598,70 @@
             }
         }
 
+        // confirmation for deleting a product
         window.removeItemWithAnimation = function(itemId) {
-            const swipeContainer = document.querySelector(`[data-id="${itemId}"]`).closest('.swipe-container');
-            
-            if (confirm('Are you sure you want to remove this item from your cart?')) {
-                swipeContainer.style.transition = 'all 0.3s ease';
-                swipeContainer.style.transform = 'translateX(-100%)';
-                swipeContainer.style.opacity = '0';
-                
-                setTimeout(() => {
-                    removeItem(itemId);
-                }, 300);
-            } else {
-                resetAllSwipes();
-            }
-        };
+          const swipeContainer = document.querySelector(`[data-id="${itemId}"]`).closest('.swipe-container');
+          
+          if (confirm('Are you sure you want to remove this item from your cart?')) {
+              swipeContainer.style.transition = 'all 0.3s ease';
+              swipeContainer.style.transform = 'translateX(-100%)';
+              swipeContainer.style.opacity = '0';
+              
+              setTimeout(() => {
+                  removeItem(itemId);
+              }, 300);
+          } else {
+              if (typeof resetAllSwipes === 'function') {
+                  resetAllSwipes();
+              }
+          }
+      };
+
+      // listener to handle quantity input changes - for product you add
+      window.handleQuantityInput = function(input) {
+          const value = parseInt(input.value);
+          const itemId = input.dataset.id;
+          
+          if (isNaN(value) || value < 1) {
+              input.value = 1;
+              updateItemQuantity(itemId, 1);
+          } else if (value > 999) {
+              input.value = 999;
+              updateItemQuantity(itemId, 999);
+          } else {
+              updateItemQuantity(itemId, value);
+          }
+      };
 
         function removeItem(itemId) {
-            cartData = cartData.filter(item => item.id != itemId);
-            localStorage.setItem('cartData', JSON.stringify(cartData));
+            dealerCartData = dealerCartData.filter(item => item.id != itemId);
+            localStorage.setItem('dealerCartData', JSON.stringify(dealerCartData));
+            
+            // Also update cartData for compatibility
+            localStorage.setItem('cartData', JSON.stringify(dealerCartData));
+            
             updateCartStats();
             renderCartItems();
             updateOrderSummary();
         }
 
         function updateCartStats() {
-            const totalItems = cartData.reduce((sum, item) => sum + item.quantity, 0);
-            const totalAmount = cartData.reduce((sum, item) => sum + (item.price * item.quantity), 0);
+            const totalItems = dealerCartData.reduce((sum, item) => sum + item.quantity, 0);
+            const totalAmount = dealerCartData.reduce((sum, item) => sum + (item.price * item.quantity), 0);
+            
+            localStorage.setItem('dealerCartItems', totalItems.toString());
+            localStorage.setItem('dealerCartTotal', totalAmount.toFixed(2));
             
             localStorage.setItem('cartItems', totalItems.toString());
             localStorage.setItem('cartTotal', totalAmount.toFixed(2));
+            
+            if (typeof triggerCartBadgeUpdate === 'function') {
+                triggerCartBadgeUpdate();
+            }
         }
 
         function updateOrderSummary() {
-            const subtotal = cartData.reduce((sum, item) => sum + (item.price * item.quantity), 0);
+            const subtotal = dealerCartData.reduce((sum, item) => sum + (item.price * item.quantity), 0);
             const total = subtotal;
 
             const subtotalElement = document.getElementById('subtotal');
@@ -1674,47 +1674,70 @@
         }
 
         const placeOrderBtn = document.getElementById('place-order-btn');
-        if (placeOrderBtn) {
-            placeOrderBtn.addEventListener('click', function() {
-                if (cartData.length === 0) {
-                    alert('Your cart is empty. Please add some items first.');
-                    return;
-                }
+          if (placeOrderBtn) {
+              placeOrderBtn.addEventListener('click', function() {
+                  if (dealerCartData.length === 0) {
+                      alert('Your cart is empty. Please add some items first.');
+                      return;
+                  }
 
-                const paymentMethodElement = document.querySelector('input[name="payment_method"]:checked');
-                const paymentMethod = paymentMethodElement ? paymentMethodElement.value : 'cod';
-                
-                const orderData = {
-                    items: cartData,
-                    payment_method: paymentMethod,
-                    subtotal: cartData.reduce((sum, item) => sum + (item.price * item.quantity), 0),
-                    total: cartData.reduce((sum, item) => sum + (item.price * item.quantity), 0),
-                    order_notes: document.getElementById('order-notes') ? document.getElementById('order-notes').value : ''
-                };
+                  const paymentMethodElement = document.querySelector('input[name="payment_method"]:checked');
+                  const paymentMethod = paymentMethodElement ? paymentMethodElement.value : 'cod';
+                  
+                  console.log('Selected payment method:', paymentMethod);
+                  console.log('Payment method element:', paymentMethodElement);
+                  
+                  const orderData = {
+                      items: dealerCartData,
+                      payment_method: paymentMethod,
+                      subtotal: dealerCartData.reduce((sum, item) => sum + (item.price * item.quantity), 0),
+                      total: dealerCartData.reduce((sum, item) => sum + (item.price * item.quantity), 0),
+                      order_notes: document.getElementById('order-notes') ? document.getElementById('order-notes').value : ''
+                  };
 
-                localStorage.setItem('orderData', JSON.stringify(orderData));
+                  localStorage.setItem('dealerOrderData', JSON.stringify(orderData));
 
-                this.disabled = true;
-                this.innerHTML = 'Processing... <i class="bi bi-hourglass-split"></i>';
+                  this.disabled = true;
+                  this.innerHTML = 'Processing... <i class="bi bi-hourglass-split"></i>';
 
-                setTimeout(() => {
-                    window.location.href = "{{ route('order-payment') }}";
-                }, 1000);
+                  setTimeout(() => {
+                      window.location.href = "{{ route('order-payment') }}";
+                  }, 1000);
 
-                console.log('Order Data:', orderData);
-            });
-        }
+                  console.log('Dealer Order Data:', orderData);
+              });
+          }
 
         renderCartItems();
         updateOrderSummary();
     });
 </script>
 
+
 <script>
 function openDeliveryOptions() {
     const modal = document.getElementById('clientModal');
     modal.classList.add('active');
     document.body.style.overflow = 'hidden';
+    
+    const currentMethod = localStorage.getItem('deliveryMethod') || 'pickup';
+    const currentDate = localStorage.getItem('deliveryDate') || '21-june-2020';
+    
+    const radioButton = document.querySelector(`input[name="delivery_method"][value="${currentMethod}"]`);
+    if (radioButton) {
+        radioButton.checked = true;
+        
+        document.querySelectorAll('.delivery-option').forEach(option => {
+            option.classList.remove('selected');
+        });
+        radioButton.closest('.delivery-option').classList.add('selected');
+    }
+    
+    const dateSelector = document.getElementById('pickupDate');
+    if (dateSelector) {
+        dateSelector.value = currentDate;
+    }
+    
     if (typeof resetAllSwipes === 'function') {
         resetAllSwipes();
     }
@@ -1735,6 +1758,46 @@ function selectDeliveryOption(element, type) {
     
     const radio = element.querySelector('input[type="radio"]');
     radio.checked = true;
+    
+    updateAssignedAdsDisplay(type);
+}
+
+function updateAssignedAdsDisplay(deliveryType) {
+    const adsIcon = document.querySelector('.ads-icon img');
+    const adsName = document.getElementById('assigned-ads-name');
+    const adsLabel = document.querySelector('.ads-label');
+    
+    if (deliveryType === 'pickup') {
+        if (adsIcon) {
+            adsIcon.src = "{{ asset('images/walk.png') }}";
+            adsIcon.alt = "Pickup";
+            adsIcon.style.width = "80px";
+            adsIcon.style.height = "80px";
+        }
+        if (adsName) {
+            adsName.textContent = "Customer";
+        }
+        if (adsLabel) {
+            adsLabel.textContent = "PICKUP";
+        }
+        
+        console.log('Changed to pickup mode');
+    } else if (deliveryType === 'delivery') {
+        if (adsIcon) {
+            adsIcon.src = "{{ asset('images/riders.png') }}";
+            adsIcon.alt = "Rider";
+            adsIcon.style.width = "100px";
+            adsIcon.style.height = "100px";
+        }
+        if (adsName) {
+            adsName.textContent = "YULIVER BALBANERO";
+        }
+        if (adsLabel) {
+            adsLabel.textContent = "ASSIGNED ADS";
+        }
+        
+        console.log('Changed to delivery mode');
+    }
 }
 
 function updateClientSelection() {
@@ -1744,10 +1807,23 @@ function updateClientSelection() {
     console.log('Selected method:', selectedMethod);
     console.log('Selected date:', selectedDate);
     
+    updateAssignedAdsDisplay(selectedMethod);
+    
+    localStorage.setItem('deliveryMethod', selectedMethod);
+    localStorage.setItem('deliveryDate', selectedDate);
+    
     closeClientModal();
 }
 
 document.addEventListener('DOMContentLoaded', function() {
+    let savedMethod = localStorage.getItem('dealerDeliveryMethod');
+    if (!savedMethod) {
+        savedMethod = 'delivery';
+        localStorage.setItem('dealerDeliveryMethod', 'delivery');
+    }
+
+    updateAssignedAdsDisplay(savedMethod);
+
     const clientModal = document.getElementById('clientModal');
     if (clientModal) {
         clientModal.addEventListener('click', function(e) {
@@ -1756,7 +1832,6 @@ document.addEventListener('DOMContentLoaded', function() {
             }
         });
     }
-    
     document.addEventListener('keydown', function(e) {
         if (e.key === 'Escape') {
             closeClientModal();
@@ -1764,96 +1839,37 @@ document.addEventListener('DOMContentLoaded', function() {
     });
 });
 
-function openClientModal() {
-  const modal = document.getElementById('clientSelectionModal');
-  modal.classList.add('active');
-  document.body.style.overflow = 'hidden';
-  if (typeof resetAllSwipes === 'function') {
-    resetAllSwipes();
-  }
-}
-
-function closeClientSelectionModal() {
-  const modal = document.getElementById('clientSelectionModal');
-  modal.classList.remove('active');
-  document.body.style.overflow = '';
-}
-
-function selectClient(clientId, clientName) {
-  console.log('Selected client:', clientId, clientName);
-  closeClientSelectionModal();
-}
-
-function addNewCustomer() {
-  console.log('Add new customer clicked');
-  closeClientSelectionModal();
-}
 
 document.addEventListener('DOMContentLoaded', function() {
-  const searchInput = document.getElementById('clientSearchInput');
-  if (searchInput) {
-    searchInput.addEventListener('input', function() {
-      const searchTerm = this.value.toLowerCase();
-      const clientItems = document.querySelectorAll('.client-item');
-      
-      clientItems.forEach(item => {
-        const clientName = item.querySelector('.client-name').textContent.toLowerCase();
-        if (clientName.includes(searchTerm)) {
-          item.style.display = 'flex';
-        } else {
-          item.style.display = 'none';
+    const savedDeliveryMethod = localStorage.getItem('deliveryMethod');
+    
+    if (savedDeliveryMethod) {
+        const savedRadio = document.querySelector(`input[name="delivery_method"][value="${savedDeliveryMethod}"]`);
+        if (savedRadio) {
+            savedRadio.checked = true;
+            
+            document.querySelectorAll('.delivery-option').forEach(option => {
+                option.classList.remove('selected');
+            });
+            savedRadio.closest('.delivery-option').classList.add('selected');
         }
-      });
-    });
-  }
-  
-  const clientSelectionModal = document.getElementById('clientSelectionModal');
-  if (clientSelectionModal) {
-    clientSelectionModal.addEventListener('click', function(e) {
-      if (e.target === this) {
-        closeClientSelectionModal();
-      }
-    });
-  }
-  
-  document.addEventListener('keydown', function(e) {
-    if (e.key === 'Escape') {
-      closeClientSelectionModal();
+        
+        updateAssignedAdsDisplay(savedDeliveryMethod);
+    } else {
+        updateAssignedAdsDisplay('pickup');
     }
-  });
+    
+    const savedDate = localStorage.getItem('deliveryDate');
+    if (savedDate) {
+        const dateSelector = document.getElementById('pickupDate');
+        if (dateSelector) {
+            dateSelector.value = savedDate;
+        }
+    }
 });
 </script>
 
 <script>
-function openAddCustomerModal() {
-  const modal = document.getElementById('addCustomerModal');
-  modal.classList.add('active');
-  document.body.style.overflow = 'hidden';
-  setTimeout(() => {
-    const nameInput = document.getElementById('customerName');
-    if (nameInput) nameInput.focus();
-  }, 300);
-  if (typeof resetAllSwipes === 'function') {
-    resetAllSwipes();
-  }
-}
-
-function closeAddCustomerModal() {
-  const modal = document.getElementById('addCustomerModal');
-  modal.classList.remove('active');
-  document.body.style.overflow = '';
-  const form = document.getElementById('addCustomerForm');
-  if (form) form.reset();
-}
-
-function addNewCustomer() {
-  console.log('Add new customer clicked');
-  closeClientSelectionModal();
-  setTimeout(() => {
-    openAddCustomerModal();
-  }, 200);
-}
-
 document.addEventListener('DOMContentLoaded', function() {
   const addCustomerForm = document.getElementById('addCustomerForm');
   if (addCustomerForm) {
@@ -1924,5 +1940,4 @@ document.addEventListener('DOMContentLoaded', function() {
     });
   }
 });
-</script>
-
+</script>   

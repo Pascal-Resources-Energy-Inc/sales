@@ -44,6 +44,7 @@
 
   <style>
      body {
+      overflow-x: hidden;
       margin: 0;
       background: #f8f9fa;
       font-family: Arial, sans-serif;
@@ -455,174 +456,236 @@
         justify-content: center;
     }
 
-/* Active State */
-.bottom-nav .nav-item.active,
-.bottom-nav .nav-item:hover {
-  color: #4facfe;
-}
+    /* Active State */
+    .bottom-nav .nav-item.active,
+    .bottom-nav .nav-item:hover {
+      color: #4facfe;
+    }
 
-.bottom-nav .nav-item.active i,
-.bottom-nav .nav-item:hover i {
-  color: #4facfe;
-}
+    .bottom-nav .nav-item.active i,
+    .bottom-nav .nav-item:hover i {
+      color: #4facfe;
+    }
 
-.qr-icon-up {
-  position: absolute;
-  bottom: 20px;
-  left: 50%;
-  transform: translateX(-50%);
-  text-align: center;
-  text-decoration: none;
-  color: #5bc2e7;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  z-index: 1100;
-  cursor: pointer;
-}
+    .qr-icon-up {
+      position: absolute;
+      bottom: 25px;
+      left: 50%;
+      transform: translateX(-50%);
+      text-align: center;
+      text-decoration: none;
+      color: #5bc2e7;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      z-index: 1100;
+      cursor: pointer;
+    }
 
-/* The circle around the QR icon */
-.qr-icon-up .icon-wrapper {
-  width: 50px;
-  height: 70px;
-  border: 2px solid #5bc2e7;
-  border-radius: 50%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  margin-bottom: 6px;
-  background: #fff;
-  transition: all 0.3s ease;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15); /* Subtle shadow */
-}
+    /* The circle around the QR icon */
+    .icon-wrapper {
+      width: 50px;
+      height: 50px !important;
+      border: 2px solid #5bc2e7;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 6px;
+      background: #fff;
+      transition: all 0.3s ease;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15); /* Subtle shadow */
+    }
 
-.qr-icon-up i {
-  font-size: 22px;
-  color: #5bc2e7;
-}
+    .qr-icon-up i {
+      font-size: 22px;
+      color: #5bc2e7;
+    }
 
-.qr-icon-up span {
-  font-size: 12px;
-  font-weight: 500;
-  color: #5bc2e7;
-}
+    .qr-icon-up span {
+      font-size: 12px;
+      font-weight: 500;
+      color: #5bc2e7;
+    }
 
-/* Hover effects */
-.qr-icon-up:hover .icon-wrapper {
-  background-color: #5bc2e7;
-}
+    /* Hover effects */
+    .qr-icon-up:hover .icon-wrapper {
+      background-color: #5bc2e7;
+    }
 
-.qr-icon-up:hover i {
-  color: #fff;
-}
+    .qr-icon-up:hover i {
+      color: #fff;
+    }
 
-.qr-icon-up:hover span {
-  color: #5bc2e7;
-}
+    .qr-icon-up:hover span {
+      color: #5bc2e7;
+    }
 
-/* QR Camera Modal Styles */
-.camera-modal-overlay {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background: rgba(0, 0, 0, 0.9);
-  display: none;
-  justify-content: center;
-  align-items: center;
-  z-index: 2500;
-}
+    /* QR Camera Modal Styles */
+    .camera-modal-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.9);
+      display: none;
+      justify-content: center;
+      align-items: center;
+      z-index: 2500;
+    }
 
-.camera-modal-content {
-  background: #fff;
-  border-radius: 15px;
-  width: 95%;
-  max-width: 400px;
-  max-height: 90vh;
-  overflow: hidden;
-  position: relative;
-  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.5);
-}
+    .camera-modal-content {
+      background: #fff;
+      border-radius: 15px;
+      width: 95%;
+      max-width: 400px;
+      max-height: 90vh;
+      overflow: hidden;
+      position: relative;
+      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.5);
+    }
 
-.camera-header {
-  padding: 15px 20px;
-  background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
-  color: white;
-  text-align: center;
-  position: relative;
-}
+    .camera-header {
+      padding: 15px 20px;
+      background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+      color: white;
+      text-align: center;
+      position: relative;
+    }
 
-.camera-header h3 {
-  margin: 0;
-  font-size: 18px;
-  font-weight: 600;
-}
+    .camera-header h3 {
+      margin: 0;
+      font-size: 18px;
+      font-weight: 600;
+    }
 
-.camera-close {
-  position: absolute;
-  top: 12px;
-  right: 20px;
-  background: none;
-  border: none;
-  color: white;
-  font-size: 24px;
-  cursor: pointer;
-  padding: 8px;
-  border-radius: 50%;
-  transition: background 0.2s ease;
-  width: 40px;
-  height: 40px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
+    .camera-close {
+      position: absolute;
+      top: 12px;
+      right: 20px;
+      background: none;
+      border: none;
+      color: white;
+      font-size: 24px;
+      cursor: pointer;
+      padding: 8px;
+      border-radius: 50%;
+      transition: background 0.2s ease;
+      width: 40px;
+      height: 40px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
 
-.camera-close:hover { 
-  background: rgba(255, 255, 255, 0.2); 
-}
+    .camera-close:hover { 
+      background: rgba(255, 255, 255, 0.2); 
+    }
 
-.camera-container {
-  position: relative;
-  width: 100%;
-  height: 300px;
-  background: #000;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-}
+    .camera-container {
+      position: relative;
+      width: 100%;
+      height: 300px;
+      background: #000;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
 
-#cameraVideo {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-}
+    #cameraVideo {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
 
-.camera-controls {
-  padding: 20px;
-  text-align: center;
-  background: #f8f9fa;
-}
+    .camera-controls {
+      padding: 20px;
+      text-align: center;
+      background: #f8f9fa;
+    }
 
-.camera-status {
-  margin-bottom: 15px;
-  font-size: 14px;
-  color: #666;
-  font-weight: 500;
-}
+    .camera-status {
+      margin-bottom: 15px;
+      font-size: 14px;
+      color: #666;
+      font-weight: 500;
+    }
 
-/* Mobile responsive for camera modal */
-@media (max-width: 375px) {
-  .camera-modal-content { 
-    width: 98%; 
-  }
-  .camera-container { 
-    height: 250px; 
-  }
-  .camera-controls { 
-    padding: 15px; 
-  }
-}
+    .cart-icon-container {
+      position: relative;
+      display: inline-block;
+    }
+
+    .cart-badge {
+      position: absolute;
+      top: -8px;
+      right: -8px;
+      background: #ff4757;
+      color: white;
+      border-radius: 50%;
+      min-width: 18px;
+      height: 18px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 11px;
+      font-weight: 600;
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+      border: 2px solid white;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+      transform: scale(0);
+      transition: transform 0.2s ease;
+      z-index: 10;
+    }
+
+    .cart-badge.show {
+      transform: scale(1);
+    }
+
+    .cart-badge.animate {
+      animation: cartBounce 0.4s ease-out;
+    }
+
+    @keyframes cartBounce {
+      0% { transform: scale(0.8); }
+      50% { transform: scale(1.2); }
+      100% { transform: scale(1); }
+    }
+
+    .bottom-nav .cart-icon-container {
+      position: relative;
+    }
+
+    .bottom-nav .cart-badge {
+      top: -6px;
+      right: -6px;
+      min-width: 16px;
+      height: 16px;
+      font-size: 10px;
+    }
+
+    @media (max-width: 480px) {
+      .cart-badge {
+        min-width: 16px;
+        height: 16px;
+        font-size: 10px;
+        top: -6px;
+        right: -6px;
+      }
+    }
+
+    @media (max-width: 375px) {
+      .camera-modal-content { 
+        width: 98%; 
+      }
+      .camera-container { 
+        height: 250px; 
+      }
+      .camera-controls { 
+        padding: 15px; 
+      }
+    }
 
     </style>
 </head>
@@ -675,8 +738,8 @@
             </a>
         </li>
         <li>
-            <a href="{{url('/products')}}">
-                <i class="bi bi-shop"></i> Products
+            <a href="{{url('/home')}}">
+                <i class="bi bi-shop"></i> Manage Store
             </a>
         </li>
         <li class="dropdown-item">
@@ -717,7 +780,7 @@
                 @yield('content')
     
  
-
+@if (!request()->is('account') && !request()->is('list_products') && !request()->is('add_product') && !request()->is('manage_store'))
   <!-- Bottom Navbar -->
   <nav class="bottom-nav">
     <a href="{{url('/home')}}" class="nav-item {{ request()->is('home') ? 'active' : '' }}">
@@ -725,11 +788,11 @@
       <span class="under">Home</span>
     </a>
     <a href="{{url('/products')}}" class="nav-item {{ request()->is('products') ? 'active' : '' }}">
-      <i class="bi bi-cart"></i>
-      <span class="under">Cart</span>
+      <i class="bi bi-bag"></i>
+      <span class="under">Products</span>
     </a>
     <!-- Updated QR Button with Camera functionality -->
-    <div class="nav-item qr-icon-up" id="qrCameraButton">
+    <div class="qr-icon-up" id="qrCameraButton">
         <div class="icon-wrapper">
             <i class="fas fa-barcode"></i>
         </div>
@@ -749,6 +812,8 @@
       <span class="under">Profile</span>
     </a>
   </nav>
+  @endif
+  
 
   <!-- QR Camera Modal -->
   <div class="camera-modal-overlay" id="cameraModal">

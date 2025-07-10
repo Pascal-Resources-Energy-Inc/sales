@@ -74,7 +74,6 @@
     font-weight: 600;
     color: #333;
     margin: 0;
-    font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
   }
 
   .filter-section {
@@ -94,7 +93,6 @@
     font-size: 16px;
     color: #333;
     font-weight: 500;
-    font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
     transition: background-color 0.2s ease;
   }
 
@@ -129,14 +127,12 @@
     font-size: 14px;
     font-weight: 600;
     color: #666;
-    font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
   }
 
   .group-total {
     font-size: 14px;
     font-weight: 700;
     color: #4A90E2;
-    font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
   }
 
   .transaction-item {
@@ -166,13 +162,11 @@
     font-weight: 700;
     color: #333;
     margin-bottom: 4px;
-    font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
   }
 
   .transaction-info {
     font-size: 13px;
     color: #666;
-    font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
   }
 
   .transaction-status {
@@ -188,7 +182,6 @@
     font-size: 12px;
     font-weight: 600;
     text-transform: uppercase;
-    font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
   }
 
   .status-paid {

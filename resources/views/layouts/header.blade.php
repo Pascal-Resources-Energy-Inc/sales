@@ -107,7 +107,7 @@
 
     .side-navbar ul li {
       padding: 15px 20px;
-      border-bottom: 1px solid #eee;
+      /* border-bottom: 1px solid #eee; */
     }
 
     .side-navbar ul li a {
@@ -256,8 +256,8 @@
   </div>
 
   <!-- ===== Side Navbar (Drawer) ===== -->
- <div class="side-navbar d-flex flex-column  p-3" id="sideNavbar">
-    <h4 class="mb-4">Welcome {{ auth()->user()->name }}!</h4>
+ <div class="side-navbar d-flex flex-column  p-2" id="sideNavbar">
+    <h4 class="m-4">Welcome {{ auth()->user()->name }}!</h4>
 
     <!-- Navigation Menu -->
     <ul class="text-white">
@@ -280,7 +280,7 @@
 
     <!-- Logout Button at Bottom -->
     <div class="mt-auto">
-        <a href="#" class="btn btn-outline w-100 bg-white text-danger">
+        <a href="#" onclick="logout(); show();" class="btn btn-outline w-100 bg-white text-danger">
             <i class="bi bi-box-arrow-right"></i> Logout
         </a>
     </div>
@@ -325,9 +325,18 @@
       <span>Profile</span>
     </a>
   </nav>
-
+ <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
+        {{ csrf_field() }}
+    </form>
   <!-- Bootstrap JS -->
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+   <script>
+            function logout() {
+            event.preventDefault();
+            document.getElementById('logout-form').submit();
+        }
+    
+    </script>
   <script>
     const menuToggle = document.getElementById('menuToggle');
     const sideNavbar = document.getElementById('sideNavbar');
@@ -345,5 +354,7 @@
       overlay.classList.remove('show');
     });
     </script>
+
+    @yield('js')
 </body>
 </html>

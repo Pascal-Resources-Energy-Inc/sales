@@ -18,6 +18,7 @@
 
   <!-- Bootstrap Icons -->
   <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
  
     <link href="https://fonts.googleapis.com/css?family=Nunito" rel="stylesheet" type="text/css">
     <style>
@@ -58,14 +59,13 @@
       top: 0;
       left: 0;
       width: 100%;
-      /* background: #007bff; */
+      background: #ffffffff;
       color: #5bc2e7;
       display: flex;
       align-items: center;
-      /* justify-content: space-between; */
       padding: 12px 15px;
       z-index: 1050;
-      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+      outline: 0.2px solid #cacacaa6;
     }
 
     .top-navbar h4 {
@@ -123,7 +123,6 @@
       font-size: 18px;
     }
 
-    /* ===== Overlay when side menu is open ===== */
     .overlay {
       position: fixed;
       top: 0;
@@ -192,17 +191,17 @@
 }
 
 .qr-icon-up {
-  position: absolute; /* Take it out of the navbar flow */
-  bottom: 20px; /* Raise above the navbar */
+  position: absolute;
+  bottom: 20px;
   left: 50%;
-  transform: translateX(-50%); /* Center horizontally */
+  transform: translateX(-50%);
   text-align: center;
   text-decoration: none;
   color: #5bc2e7;
   display: flex;
   flex-direction: column;
   align-items: center;
-  z-index: 1100; /* Keep it above other navbar items */
+  z-index: 1100;
 }
 
 /* The circle around the QR icon */
@@ -261,17 +260,32 @@
 
     <!-- Navigation Menu -->
     <ul class="text-white">
-        <li class="">
-            <a href="#" class="active">
+        <li>
+            <a href="{{ route('home') }}" class="active">
                 <i class="bi bi-house-door"></i> Dashboard
             </a>
         </li>
         <li>
-            <a href="#" >
-                <i class="bi bi-person"></i> Profile
+            <a href="#">
+                <i class="bi bi-credit-card"></i> Transactions
             </a>
         </li>
-        <li >
+        <li>
+            <a href="#">
+                <i class="bi bi-bicycle"></i> Riders
+            </a>
+        </li>
+        <li>
+            <a href="#">
+                <i class="bi bi-people"></i> Customers
+            </a>
+        </li>
+        <li>
+            <a href="{{ route('popular') }}">
+                <i class="bi bi-box-seam"></i> Products
+            </a>
+        </li>
+        <li>
             <a href="#">
                 <i class="bi bi-gear"></i> Settings
             </a>
@@ -298,7 +312,7 @@
   <!-- Bottom Navbar -->
   <nav class="bottom-nav">
     <a href="#" class="nav-item active">
-      <i class="bi bi-speedometer2"></i>
+      <i class="bi bi-house-door"></i>
       <span>Home</span>
     </a>
     <a href="#" class="nav-item">
@@ -307,7 +321,7 @@
     </a>
     <a href="#" class="nav-item qr-icon-up">
         <div class="icon-wrapper">
-            <i class="bi bi-qr-code"></i>
+            <i class="fas fa-barcode"></i>
         </div>
         <span>QR</span>
     </a>

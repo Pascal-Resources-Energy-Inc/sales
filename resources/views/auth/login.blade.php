@@ -8,13 +8,18 @@
     box-sizing: border-box;
 }
 
+html, body {
+    height: 100%;
+    overflow-x: hidden;
+}
+
 body {
     font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
     background-color: #ffffff;
 }
 
 .landing-page {
-    min-height: 100vh;
+    height: 100vh;
     background-color: #ffffff;
     display: flex;
     flex-direction: column;
@@ -25,7 +30,7 @@ body {
     display: flex;
     align-items: center;
     justify-content: center;
-    padding: 0 24px;
+    padding: 40px 24px 30px 24px;
 }
 
 .landing-wrapper {
@@ -35,42 +40,41 @@ body {
 }
 
 .logo-section {
-    margin-bottom: 40px;
-}
-
-.main-logo-img {
-    max-width: 549px;
-    width: 100%;
-    max-height: 186px;
-    height: 100%;
-}
-
-.illustration-section {
     margin-bottom: 30px;
 }
 
-.human-illustration {
-    max-width: 256.42px;
+.main-logo-img {
     width: 100%;
-    max-height: 284px;
+    max-width: 300px;
+    height: auto;
+}
+
+.illustration-section {
+    margin-bottom: 40px;
+}
+
+.human-illustration {
+    width: 100%;
+    max-width: 280px;
     height: auto;
 }
 
 .tagline {
-    margin-bottom: 30px;
+    margin-bottom: 20px;
 }
 
 .tagline p {
     font-size: 18px;
     color: #666666;
     font-weight: 400;
+    line-height: 1.4;
 }
 
 .progress-dots {
     display: flex;
     justify-content: center;
     gap: 8px;
-    margin-bottom: 40px;
+    margin-bottom: 60px;
 }
 
 .dot {
@@ -85,185 +89,9 @@ body {
     background-color: #5DADE2;
 }
 
-.landing-signin-button {
-    max-width: 327px;
-    width: 100%;
-    height: 57px;
-    border: none;
-    border-radius: 28px;
-    background-color: #5DADE2;
-    color: white;
-    font-size: 16px;
-    font-weight: 500;
-    cursor: pointer;
-    margin-bottom: 24px;
-    transition: all 0.3s ease;
-}
-
-.landing-signin-button:hover {
-    background-color: #3498DB;
-    transform: translateY(-2px);
-}
-
-.role-selection-page {
-    min-height: 100vh;
-    background-color: #ffffff;
-    display: flex;
-    flex-direction: column;
-}
-
-.role-header {
-    display: flex;
-    align-items: center;
-    padding: 20px 24px;
-    background-color: #ffffff;
-}
-
-.role-content {
-    flex: 1;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    padding: 0 24px;
-    margin-top: -80px;
-}
-
-.role-wrapper {
-    width: 100%;
-    max-width: 350px;
-    text-align: center;
-}
-
-.welcome-section {
-    margin-bottom: 20px;
-}
-
-.welcome-title {
-    font-size: 24px;
-    color: #4A5568;
-    font-weight: 600;
-    margin-bottom: 8px;
-    line-height: 1.2;
-}
-
-.welcome-subtitle {
-    font-size: 14px;
-    color: #666666;
-    font-weight: 400;
-}
-
-.context-image-section {
-    margin-bottom: 25px;
-}
-
-.context-image {
-    max-width: 200px;
-    width: 100%;
-    height: auto;
-}
-
-.role-selection-page .progress-dots {
-    display: flex;
-    justify-content: center;
-    gap: 8px;
-    margin-bottom: 25px;
-}
-
-.role-buttons {
-    margin-bottom: 20px;
-    display: flex;
-    flex-direction: column;
-    gap: 12px;
-}
-
-.role-button {
-    width: 100%;
-    height: 48px;
-    border: none;
-    border-radius: 24px;
-    background-color: #5DADE2;
-    color: white;
-    font-size: 16px;
-    font-weight: 500;
-    cursor: pointer;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 10px;
-    transition: all 0.3s ease;
-    position: relative;
-}
-
-.role-button:hover {
-    background-color: #3498DB;
-    transform: translateY(-2px);
-}
-
-/* New styles for role selection indication */
-.role-button.selected {
-    opacity: 0.8;
-    box-shadow: 0 0 0 2px #ffffff, 0 0 0 4px #5DADE2;
-}
-
-.selected-indicator {
-    position: absolute;
-    right: 15px;
-    font-size: 16px;
-    font-weight: bold;
-}
-
-.role-icon {
-    width: 20px;
-    height: 20px;
-    stroke: white;
-}
-
-/* Continue button styles */
-.continue-section {
-    margin-bottom: 20px;
-    opacity: 0;
-    transition: opacity 0.3s ease;
-}
-
-.continue-section.show {
-    opacity: 1;
-}
-
-.continue-button {
-    width: 100%;
-    height: 48px;
-    border: none;
-    border-radius: 24px;
-    background-color: #5DADE2;
-    color: white;
-    font-size: 16px;
-    font-weight: 600;
-    cursor: pointer;
-    transition: all 0.3s ease;
-}
-
-.continue-button:hover {
-    background-color: #3498DB;
-    transform: translateY(-2px);
-}
-
-.create-account-section {
-    margin-bottom: 15px;
-}
-
-.create-account-link {
-    color: #5DADE2;
-    text-decoration: underline;
-    font-size: 14px;
-    font-weight: 400;
-}
-
-.create-account-link:hover {
-    color: #3498DB;
-}
 
 .login-page {
-    min-height: 100vh;
+    height: 100vh;
     background-color: #ffffff;
     display: flex;
     flex-direction: column;
@@ -275,6 +103,7 @@ body {
     justify-content: space-between;
     padding: 20px 24px;
     background-color: #ffffff;
+    flex-shrink: 0;
 }
 
 .header-left {
@@ -284,6 +113,7 @@ body {
 }
 
 .back-btn {
+    top: 20px;
     width: 40px;
     height: 40px;
     border-radius: 50%;
@@ -304,7 +134,7 @@ body {
 }
 
 .page-title {
-    margin-top: 7px;
+    margin-top: 30px;
     margin-left: 20px;
     font-size: 27px;
     font-weight: 550;
@@ -324,41 +154,16 @@ body {
 }
 
 .login-content {
-    margin-top: 0px;
     flex: 1;
     display: flex;
-    padding: 0 24px;
+    align-items: center;
+    justify-content: center;
+    padding: 0 24px 20px 24px;
 }
 
 .form-container {
     width: 100%;
     max-width: 400px;
-}
-
-/* Role indicator in login form */
-.role-indicator {
-    background-color: #F0F8FF;
-    border-left: 4px solid #5DADE2;
-    padding: 12px 16px;
-    border-radius: 8px;
-    margin-bottom: 24px;
-}
-
-.role-info {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-}
-
-.role-label {
-    font-size: 14px;
-    color: #666666;
-}
-
-.role-name {
-    font-size: 16px;
-    font-weight: 600;
-    color: #5DADE2;
 }
 
 .input-group {
@@ -406,45 +211,6 @@ body {
     margin-top: 6px;
 }
 
-.otp-section {
-    display: flex;
-    flex-direction: column;
-    align-items: flex-start;
-    gap: 12px;
-    margin-bottom: 32px;
-}
-
-.otp-text {
-    font-size: 16px;
-    color: #666666;
-}
-
-.email-btn {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    padding: 10px 20px;
-    border: none;
-    border-radius: 20px;
-    background-color: #5DADE2;
-    color: white;
-    font-size: 14px;
-    font-weight: 500;
-    cursor: pointer;
-    transition: background-color 0.2s ease;
-}
-
-.email-btn:hover {
-    background-color: #3498DB;
-}
-
-.email-icon {
-    width: 16px;
-    height: 16px;
-    stroke: white;
-    fill: none;
-}
-
 .signin-button {
     width: 100%;
     height: 56px;
@@ -455,8 +221,8 @@ body {
     font-size: 16px;
     font-weight: 500;
     cursor: pointer;
-    margin-bottom: 24px;
     transition: background-color 0.2s ease;
+    margin-bottom: 24px;
 }
 
 .signin-button:hover {
@@ -490,36 +256,28 @@ body {
 }
 
 @media (max-width: 480px) {
-    .login-header, .role-header {
+    .landing-content {
+        padding: 30px 20px 25px 20px;
+    }
+    
+    .login-header {
         padding: 16px 20px;
     }
     
-    .landing-content, .login-content, .role-content {
-        padding: 0 20px;
+    .login-content {
+        padding: 0 20px 15px 20px;
     }
     
     .main-logo-img {
-        max-width: 200px;
+        max-width: 250px;
     }
     
     .human-illustration {
-        max-width: 160px;
-    }
-    
-    .context-image {
-        max-width: 180px;
+        max-width: 220px;
     }
     
     .tagline p {
         font-size: 16px;
-    }
-    
-    .welcome-title {
-        font-size: 22px;
-    }
-    
-    .welcome-subtitle {
-        font-size: 13px;
     }
     
     .header-left {
@@ -527,29 +285,37 @@ body {
     }
     
     .page-title {
-        font-size: 18px;
+        font-size: 22px;
     }
     
     .form-input, .signin-button {
         height: 52px;
     }
     
-    .role-button {
-        height: 44px;
-        font-size: 15px;
+    .progress-dots {
+        margin-bottom: 40px;
+    }
+}
+
+@media (max-width: 320px) {
+    .landing-content {
+        padding: 25px 15px 20px 15px;
     }
     
-    .role-icon {
-        width: 18px;
-        height: 18px;
+    .logo-section {
+        margin-bottom: 25px;
     }
     
-    .role-content {
-        margin-top: -60px;
+    .illustration-section {
+        margin-bottom: 30px;
     }
     
-    .role-wrapper {
-        max-width: 320px;
+    .tagline {
+        margin-bottom: 15px;
+    }
+    
+    .progress-dots {
+        margin-bottom: 35px;
     }
 }
 </style>

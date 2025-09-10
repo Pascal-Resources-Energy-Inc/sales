@@ -19,6 +19,20 @@ Auth::routes();
 
 Route::get('/home', 'HomeController@index')->name('home');
 
-Auth::routes();
+// Product routes
+Route::get('/products', 'ProductController@index')->name('products.index');
+Route::get('/products/create', 'ProductController@create')->name('products.create');
+Route::post('/products', 'ProductController@store')->name('products.store');
+Route::get('/products/{product}', 'ProductController@show')->name('products.show');
+Route::get('/products/{product}/edit', 'ProductController@edit')->name('products.edit');
+Route::put('/products/{product}', 'ProductController@update')->name('products.update');
+Route::delete('/products/{product}', 'ProductController@destroy')->name('products.destroy');
+Route::get('/api/products', 'ProductController@getProducts')->name('products.get');
 
-Route::get('/home', 'HomeController@index')->name('home');
+Route::get('/place-order', function () {
+    return view('place_order');
+})->name('place-order');
+
+Route::get('/popular', function () {
+    return view('popular');
+})->name('popular');

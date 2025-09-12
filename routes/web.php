@@ -29,6 +29,14 @@ Route::put('/products/{product}', 'ProductController@update')->name('products.up
 Route::delete('/products/{product}', 'ProductController@destroy')->name('products.destroy');
 Route::get('/api/products', 'ProductController@getProducts')->name('products.get');
 
+Route::get('/order-payment', function () {
+    return view('order');
+})->name('order-payment');
+
+Route::get('/reports', function () {
+    return view('reports');
+})->name('reports');
+
 Route::get('/place-order', function () {
     return view('place_order');
 })->name('place-order');

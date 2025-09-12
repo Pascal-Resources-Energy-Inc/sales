@@ -1,31 +1,6 @@
 @extends('layouts.header')
 @section('css')
 <style>
-  body {
-    background: #f8f9fa;
-    padding-bottom: 150px !important;
-    margin: 0;
-    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-  }
-
-  /* Page Header */
-  .page-header {
-    background: #fff;
-    padding: 15px 20px;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 0;
-    
-  }
-
-  .page-title {
-    font-size: 20px;
-    font-weight: 300;
-    color: #000000ff;
-    margin: 0;
-  }
-
   .header-icons {
     display: flex;
     gap: 15px;
@@ -38,15 +13,7 @@
     cursor: pointer;
   }
 
-  /* Popular Section */
-  .popular-section {
-    background: #fff;
-    margin: 10px 15px;
-    border-radius: 12px;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
-    overflow: hidden;
-  }
-
+ 
   .section-header {
     padding: 15px 20px;
     border-bottom: 1px solid #f0f0f0;
@@ -60,6 +27,7 @@
   }
 
   .popular-products {
+    margin-top: 20px !important;
     padding: 15px;
   }
 
@@ -234,14 +202,14 @@
 
   .modal-content {
     background-color: #fff;
-    margin: 5% auto;
+    margin: 20% auto;
     padding: 0;
     border-radius: 12px;
     width: 90%;
     max-width: 500px;
     box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
     animation: slideIn 0.3s ease;
-    max-height: 90vh;
+    max-height: 80vh;
     overflow-y: auto;
   }
 
@@ -551,19 +519,22 @@
       padding-right: 20px;
     }
   }
+  .page-header-nya {
+      background: #fff;
+      padding: 20px 20px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-top: -59px;
+      margin-bottom: 10px !important;
+      position: relative;
+      outline: 0.2px solid #e1e1e1ff;
+    }
 </style>
 @endsection
 
 @section('content')
-<!-- Page Header -->
-<div class="page-header">
-  <h1 class="page-title">Popular</h1>
-  <!-- <div class="header-icons">
-    <i class="bi bi-search"></i>
-    <i class="bi bi-heart"></i>
-    <i class="bi bi-cart"></i>
-  </div> -->
-</div>
+
 
 <!-- Success Message -->
 @if(session('success'))
@@ -580,10 +551,20 @@
 @endif
 
 <!-- Popular Products Section -->
-<div class="popular-section">
+<div class="content-area">
   <!-- <div class="section-header">
     <h2 class="section-title">Products</h2>
   </div> -->
+
+  <!-- Page Header -->
+<div class="page-header-nya">
+      <button class="back-btn" onclick="history.back()">
+        <i class="bi bi-arrow-left"></i>
+      </button>
+      <h1 class="page-title">Place Order</h1>
+      <div class="header-icons">
+      </div>
+    </div>
   
   <div class="popular-products">
     @php

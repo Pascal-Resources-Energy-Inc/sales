@@ -140,44 +140,105 @@
       opacity: 1;
       visibility: visible;
     }
-/* Content Area */
-.content-area {
-  padding: 20px;
-  text-align: center;
-}
 
-/* Bottom Navbar */
-.bottom-nav {
-  position: fixed;
-  bottom: 0;
-  left: 0;
-  width: 100%;
-  background: #ffffff;
-  border-top: 1px solid #ddd;
-  display: flex;
-  justify-content: space-around;
-  align-items: center;
-  padding: 8px 0;
-  box-shadow: 0 -2px 8px rgba(0,0,0,0.1);
-  z-index: 1000;
-}
 
-/* Nav Item */
-.bottom-nav .nav-item {
-  text-decoration: none;
-  color: #777;
-  font-size: 12px;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  transition: all 0.3s ease;
-}
+    .content-area {
+    padding-bottom: 100px !important;
+    text-align: center;
+    }
 
-.bottom-nav .nav-item i {
-  font-size: 22px;
-  margin-bottom: 3px;
-  transition: color 0.3s ease;
-}
+    .content-area-fix {
+    margin-top: -59px;
+    padding-bottom: 70px !important; 
+    }
+
+  /* Header styling - positioned within content area */
+    .page-header {
+      background: #fff;
+      padding: 20px 20px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-top: -10px !important;
+      margin-bottom: 10px !important;
+      position: relative;
+      outline: 0.2px solid #e1e1e1ff;
+    }
+
+    .back-btn {
+      background: none;
+      border: none;
+      color: #666;
+      font-size: 18px;
+      cursor: pointer;
+      padding: 5px;
+      transition: color 0.2s ease;
+    }
+
+    .back-btn:hover {
+      color: #4A90E2;
+    }
+
+    .page-title {
+      font-size: 20px;
+      font-weight: 600;
+      color: #4A90E2;
+      margin: 0;
+      position: absolute;
+      left: 50%;
+      transform: translateX(-50%);
+    }
+
+
+    .bottom-nav {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 80px; /* FIXED HEIGHT - CRITICAL */
+            background: #ffffff;
+            border-top: 1px solid #ddd;
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+            box-shadow: 0 -2px 8px rgba(0,0,0,0.1);
+            z-index: 1000;
+            box-sizing: border-box; /* Include padding/border in height */
+            padding: 0; /* Remove default padding */
+        }
+        
+    .bottom-nav .under {
+            margin-bottom: 5px;
+        }
+    
+    
+      .nav-item {
+            flex: 1; /* Equal width distribution */
+            display: flex !important;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            text-decoration: none;
+            color: #777;
+            font-size: 11px; /* Fixed font size */
+            height: 100%; /* Full height of bottom nav */
+            padding: 8px 2px; /* Fixed padding */
+            box-sizing: border-box;
+            transition: all 0.3s ease;
+            position: relative;
+            min-width: 0; /* Prevent flex item overflow */
+        }
+
+        .nav-item i {
+            font-size: 20px !important;
+            margin-bottom: 2px !important;
+            line-height: 1 !important;
+            width: 20px;
+            height: 50px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
 
 /* Active State */
 .bottom-nav .nav-item.active,
@@ -202,6 +263,7 @@
   flex-direction: column;
   align-items: center;
   z-index: 1100;
+  cursor: pointer;
 }
 
 /* The circle around the QR icon */
@@ -243,11 +305,117 @@
   color: #5bc2e7;
 }
 
+/* QR Camera Modal Styles */
+.camera-modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.9);
+  display: none;
+  justify-content: center;
+  align-items: center;
+  z-index: 2500;
+}
+
+.camera-modal-content {
+  background: #fff;
+  border-radius: 15px;
+  width: 95%;
+  max-width: 400px;
+  max-height: 90vh;
+  overflow: hidden;
+  position: relative;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.5);
+}
+
+.camera-header {
+  padding: 15px 20px;
+  background: linear-gradient(135deg, #5bc2e7 0%, #4A90E2 100%);
+  color: white;
+  text-align: center;
+  position: relative;
+}
+
+.camera-header h3 {
+  margin: 0;
+  font-size: 18px;
+  font-weight: 600;
+}
+
+.camera-close {
+  position: absolute;
+  top: 12px;
+  right: 20px;
+  background: none;
+  border: none;
+  color: white;
+  font-size: 24px;
+  cursor: pointer;
+  padding: 8px;
+  border-radius: 50%;
+  transition: background 0.2s ease;
+  width: 40px;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.camera-close:hover { 
+  background: rgba(255, 255, 255, 0.2); 
+}
+
+.camera-container {
+  position: relative;
+  width: 100%;
+  height: 300px;
+  background: #000;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+#cameraVideo {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.camera-controls {
+  padding: 20px;
+  text-align: center;
+  background: #f8f9fa;
+}
+
+.camera-status {
+  margin-bottom: 15px;
+  font-size: 14px;
+  color: #666;
+  font-weight: 500;
+}
+
+/* Mobile responsive for camera modal */
+@media (max-width: 375px) {
+  .camera-modal-content { 
+    width: 98%; 
+  }
+  .camera-container { 
+    height: 250px; 
+  }
+  .camera-controls { 
+    padding: 15px; 
+  }
+}
+
     </style>
 </head>
 <body>
 
   <!-- Main Content -->
+   @if(Route::currentRouteName() == 'home')
+
   <div class="top-navbar">
     <i  class="text-info pr-5 bi bi-list menu-icon" id="menuToggle"></i>
     <h4 style='margin-left:10px;' class='ml-3'>Welcome {{auth()->user()->name}}!</h4>
@@ -286,6 +454,11 @@
             </a>
         </li>
         <li>
+            <a href="{{ route('reports') }}">
+                <i class="bi bi-gear"></i> Reports
+            </a>
+        </li>
+        <li>
             <a href="#">
                 <i class="bi bi-gear"></i> Settings
             </a>
@@ -300,6 +473,8 @@
     </div>
 </div>
 
+@endif
+
 
   <!-- ===== Overlay ===== -->
   <div class="overlay" id="overlay"></div>
@@ -311,34 +486,56 @@
 
   <!-- Bottom Navbar -->
   <nav class="bottom-nav">
-    <a href="#" class="nav-item active">
+    <a href="{{route('home')}}" class="nav-item">
       <i class="bi bi-house-door"></i>
-      <span>Home</span>
+      <span class="under">Home</span>
     </a>
-    <a href="#" class="nav-item">
+    <a href="{{url('/products')}}" class="nav-item">
       <i class="bi bi-cart"></i>
-      <span>Cart</span>
+      <span class="under">Cart</span>
     </a>
-    <a href="#" class="nav-item qr-icon-up">
+    <!-- Updated QR Button with Camera functionality -->
+    <div class="nav-item qr-icon-up" id="qrCameraButton">
         <div class="icon-wrapper">
             <i class="fas fa-barcode"></i>
         </div>
         <span>QR</span>
-    </a>
+    </div>
     <a href="#" class="nav-item">
       <i class=""></i>
       <span style='color:white;'>QR</span>
     </a>
     <a href="#" class="nav-item">
       <i class="bi bi-clock-history"></i>
-      <span>History</span>
+      <span class="under">History</span>
     </a>
    
     <a href="#" class="nav-item">
       <i class="bi bi-person"></i>
-      <span>Profile</span>
+      <span class="under">Profile</span>
     </a>
   </nav>
+
+  <!-- QR Camera Modal -->
+  <div class="camera-modal-overlay" id="cameraModal">
+    <div class="camera-modal-content">
+      <div class="camera-header">
+        <h3><i class="fas fa-camera"></i> QR Scanner</h3>
+        <button class="camera-close" id="closeCameraModal">
+          <i class="bi bi-x"></i>
+        </button>
+      </div>
+      
+      <div class="camera-container">
+        <video id="cameraVideo" autoplay playsinline></video>
+      </div>
+      
+      <div class="camera-controls">
+        <div class="camera-status" id="cameraStatus">Camera is ready</div>
+      </div>
+    </div>
+  </div>
+
  <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
         {{ csrf_field() }}
     </form>
@@ -367,7 +564,96 @@
       sideNavbar.classList.remove('open');
       overlay.classList.remove('show');
     });
-    </script>
+  </script>
+
+  <!-- QR Camera JavaScript -->
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      // Get the QR button and modal elements
+      const qrCameraButton = document.getElementById('qrCameraButton');
+      const cameraModal = document.getElementById('cameraModal');
+      const closeCameraModal = document.getElementById('closeCameraModal');
+      const cameraVideo = document.getElementById('cameraVideo');
+      const cameraStatus = document.getElementById('cameraStatus');
+
+      if (!qrCameraButton) {
+        console.warn('QR Camera button not found');
+        return;
+      }
+
+      let currentStream = null;
+
+      // Open camera function
+      function openCamera() {
+        cameraModal.style.display = 'flex';
+        document.body.style.overflow = 'hidden';
+        startCamera();
+      }
+
+      // Close camera function
+      function closeCamera() {
+        cameraModal.style.display = 'none';
+        document.body.style.overflow = '';
+        stopCamera();
+      }
+
+      // Start camera function
+      async function startCamera() {
+        try {
+          cameraStatus.textContent = 'Starting camera...';
+
+          const constraints = {
+            video: {
+              facingMode: 'environment', // Use back camera for QR scanning
+              width: { ideal: 1280 },
+              height: { ideal: 720 }
+            }
+          };
+
+          currentStream = await navigator.mediaDevices.getUserMedia(constraints);
+          cameraVideo.srcObject = currentStream;
+          
+          cameraVideo.onloadedmetadata = () => {
+            cameraStatus.textContent = 'Point camera at QR code to scan';
+          };
+
+        } catch (error) {
+          console.error('Camera error:', error);
+          cameraStatus.textContent = 'Camera access failed. Please allow camera permission.';
+        }
+      }
+
+      // Stop camera function
+      function stopCamera() {
+        if (currentStream) {
+          currentStream.getTracks().forEach(track => track.stop());
+          currentStream = null;
+        }
+      }
+
+      // Event listeners
+      qrCameraButton.addEventListener('click', function(e) {
+        e.preventDefault();
+        openCamera();
+      });
+
+      closeCameraModal.addEventListener('click', closeCamera);
+
+      // Close modal when clicking outside
+      cameraModal.addEventListener('click', function(e) {
+        if (e.target === cameraModal) {
+          closeCamera();
+        }
+      });
+
+      // Close on escape key
+      document.addEventListener('keydown', function(e) {
+        if (e.key === 'Escape' && cameraModal.style.display === 'flex') {
+          closeCamera();
+        }
+      });
+    });
+  </script>
 
     @yield('js')
 </body>

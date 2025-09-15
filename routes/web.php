@@ -44,3 +44,11 @@ Route::get('/place-order', function () {
 Route::get('/popular', function () {
     return view('popular');
 })->name('popular');
+
+Route::get('/history', function () {
+    return view('history');
+})->name('history');
+
+Route::get('/account', function () {
+    return view('account');
+})->name('account');

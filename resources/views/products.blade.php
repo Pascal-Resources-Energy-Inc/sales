@@ -752,95 +752,6 @@
     font-style: italic;
   }
 
-  /* Camera modal styles - Keep existing */
-  .camera-modal-overlay {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: rgba(0, 0, 0, 0.9);
-    display: none;
-    justify-content: center;
-    align-items: center;
-    z-index: 2500;
-  }
-
-  .camera-modal-content {
-    background: #fff;
-    border-radius: 15px;
-    width: 95%;
-    max-width: 400px;
-    max-height: 90vh;
-    overflow: hidden;
-    position: relative;
-    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.5);
-  }
-
-  .camera-header {
-    padding: 15px 20px;
-    background: linear-gradient(135deg, #4A90E2 0%, #357abd 100%);
-    color: white;
-    text-align: center;
-    position: relative;
-  }
-
-  .camera-header h3 {
-    margin: 0;
-    font-size: 18px;
-    font-weight: 600;
-  }
-
-  .camera-close {
-    position: absolute;
-    top: 12px;
-    right: 20px;
-    background: none;
-    border: none;
-    color: white;
-    font-size: 24px;
-    cursor: pointer;
-    padding: 8px;
-    border-radius: 50%;
-    transition: background 0.2s ease;
-    width: 40px;
-    height: 40px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-  }
-
-  .camera-close:hover { background: rgba(255, 255, 255, 0.2); }
-
-  .camera-container {
-    position: relative;
-    width: 100%;
-    height: 300px;
-    background: #000;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-  }
-
-  #cameraVideo {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-  }
-
-  .camera-controls {
-    padding: 20px;
-    text-align: center;
-    background: #f8f9fa;
-  }
-
-  .camera-status {
-    margin-bottom: 15px;
-    font-size: 14px;
-    color: #666;
-    font-weight: 500;
-  }
-
   /* Mobile responsive */
   @media (max-width: 375px) {
     .product-name {
@@ -877,9 +788,6 @@
       padding: 10px 16px;
       font-size: 13px;
     }
-    .camera-modal-content { width: 98%; }
-    .camera-container { height: 250px; }
-    .camera-controls { padding: 15px; }
   }
 
   .quantity-modal {

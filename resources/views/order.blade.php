@@ -1,5 +1,104 @@
 @extends('layouts.header')
+
+
+@section('content')
+<div class="order-payment-page">
+  <div class="content-area-fix">
+    <div class="page-header-nya">
+      <button class="back-btn" onclick="history.back()">
+        <i class="bi bi-arrow-left"></i>
+      </button>
+      <h1 class="page-title">Order Payment</h1>
+    </div>
+
+    <div class="section-card">
+      <div class="section-header">
+        <i class="bi bi-receipt"></i>
+        Order Summary
+      </div>
+      <div class="section-content">
+        <div class="info-row">  
+          <span class="info-label">Sales Invoice:</span>
+          <span class="info-value" id="order-id">#ORD-001</span>
+        </div>
+        <div class="info-row">
+          <span class="info-label">Payment Method:</span>
+          <span class="info-value" id="payment-method">Cash on Delivery</span>
+        </div>
+        <div class="info-row">
+          <span class="info-label">Total Items:</span>
+          <span class="info-value" id="total-items">0</span>
+        </div>
+        <div class="info-row">
+          <span class="info-label">Total Amount:</span>
+          <span class="info-value" id="order-total">₱ 0.00</span>
+        </div>
+        
+        <div class="order-items" id="order-items-list">
+          <!-- Items will be populated by JavaScript -->
+        </div>
+      </div>
+    </div>
+
+    <div class="section-card">
+      <div class="section-header">
+        <i class="bi bi-credit-card"></i>
+        Payment Details
+      </div>
+      <div class="section-content">
+        <div class="form-group">
+          <label class="form-label">Selected Payment Method</label>
+          <div class="payment-method-display" id="payment-method-display">
+            <div class="payment-icon cod">
+              <i class="bi bi-cash-coin"></i>
+            </div>
+            <div class="payment-details">
+              <div class="payment-name">Cash on Delivery</div>
+              <div class="payment-desc">Customer pays upon delivery</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="form-group" id="payment-amount-group">
+          <label class="form-label" for="payment-amount">Amount Received from Customer *</label>
+          <div class="currency-input">
+            <span class="currency-symbol">₱</span>
+            <input type="number" 
+                   id="payment-amount" 
+                   class="form-control" 
+                   step="0.01" 
+                   min="0" 
+                   placeholder="0.00"
+                   required>
+          </div>
+          
+          <div class="change-calculation" id="change-display" style="display: none;">
+            <div class="change-amount" id="change-amount">Change: ₱ 0.00</div>
+          </div>
+        </div>
+
+        <div class="form-group" id="gcash-status-group" style="display: none;">
+          <div class="gcash-status">
+            <div class="gcash-status-text">✓ GCash Payment Completed</div>
+            <div class="gcash-status-desc">Payment has been processed successfully via GCash</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="complete-order-wrapper">
+      <button class="complete-order-btn" id="complete-order-btn">
+        <i class="bi bi-check-circle"></i>
+        Complete Order
+      </button>
+    </div>
+  </div>
+</div>
+@endsection
+
 @section('css')
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/limonte-sweetalert2/11.10.1/sweetalert2.min.css" rel="stylesheet">
+  
   <style>
 
     .back-btn {
@@ -71,7 +170,6 @@
       font-weight: 600;
     }
 
-    /* Order Items List */
     .order-items {
       max-height: 200px;
       overflow-y: auto;
@@ -109,7 +207,6 @@
       font-weight: 600;
     }
 
-    /* Payment Method Display */
     .payment-method-display {
       display: flex;
       align-items: center;
@@ -159,7 +256,6 @@
       font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
     }
 
-    /* Form styling */
     .form-group {
       margin-bottom: 20px;
     }
@@ -213,7 +309,6 @@
       padding-left: 35px;
     }
 
-    /* Change calculation */
     .change-calculation {
       background: #e8f4fd;
       border: 2px solid #4A90E2;
@@ -236,7 +331,6 @@
       color: #ff4757;
     }
 
-    /* GCash Payment Status */
     .gcash-status {
       background: #e8f5e8;
       border: 2px solid #28a745;
@@ -260,37 +354,32 @@
       font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
     }
 
-    /* Complete Order Button - Fixed positioning matching header layout */
     .complete-order-wrapper {
-      bottom: 120px; /* Increased to avoid bottom nav overlap */
+      bottom: 120px;
       left: var(--sidebar-width);
       right: 0;
-      z-index: 1100; /* Higher z-index than bottom nav */
+      margin-top: 20px;
       padding: 0 15px;
       transition: left var(--transition-duration) ease;
       background: transparent;
-      pointer-events: none; /* Allow clicks to pass through wrapper */
+      pointer-events: none;
     }
 
-    /* Make button clickable */
     .complete-order-btn {
-      pointer-events: auto; /* Re-enable clicks on the button itself */
+      pointer-events: auto;
     }
 
-    /* Adjust for collapsed sidebar */
     .sidebar.collapsed ~ .main-content .complete-order-wrapper {
       left: var(--sidebar-collapsed-width);
     }
 
-    /* Mobile responsive */
     @media (max-width: 768px) {
       .complete-order-wrapper {
         left: 0 !important;
         right: 0;
-        bottom: 120px; /* Increased spacing for mobile */
+        bottom: 120px;
       }
       
-      /* Ensure it's above mobile bottom nav */
       .complete-order-wrapper {
         z-index: 1100;
       }
@@ -325,7 +414,6 @@
       box-shadow: none;
     }
 
-    /* Success Animation */
     @keyframes checkmark {
       0% {
         transform: scale(0);
@@ -342,7 +430,6 @@
       animation: checkmark 0.3s ease-in-out;
     }
 
-    /* Responsive adjustments */
     @media (max-width: 480px) {
       .section-card {
         margin: 10px;
@@ -377,113 +464,120 @@
       position: relative;
       outline: 0.2px solid #e1e1e1ff;
     }
+
+    .swal2-popup {
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif !important;
+      border-radius: 16px !important;
+      box-shadow: 0 20px 60px rgba(0, 0, 0, 0.15) !important;
+    }
+    
+    .swal2-title {
+      font-weight: 700 !important;
+      color: #333 !important;
+      font-size: 1.5em !important;
+    }
+    
+    .swal2-html-container {
+      font-weight: 400 !important;
+      line-height: 1.6 !important;
+      color: #555 !important;
+    }
+    
+    .swal2-confirm {
+      background: linear-gradient(135deg, #28a745 0%, #20c997 100%) !important;
+      border: none !important;
+      border-radius: 10px !important;
+      font-weight: 600 !important;
+      padding: 12px 24px !important;
+      font-family: 'Inter', sans-serif !important;
+      box-shadow: 0 4px 12px rgba(40, 167, 69, 0.4) !important;
+    }
+    
+    .swal2-confirm:hover {
+      transform: translateY(-2px) !important;
+      box-shadow: 0 6px 16px rgba(40, 167, 69, 0.5) !important;
+    }
+    
+    .swal2-deny {
+      background: linear-gradient(135deg, #4A90E2 0%, #357ABD 100%) !important;
+      border: none !important;
+      border-radius: 10px !important;
+      font-weight: 600 !important;
+      padding: 12px 24px !important;
+      font-family: 'Inter', sans-serif !important;
+      box-shadow: 0 4px 12px rgba(74, 144, 226, 0.4) !important;
+    }
+    
+    .swal2-deny:hover {
+      transform: translateY(-2px) !important;
+      box-shadow: 0 6px 16px rgba(74, 144, 226, 0.5) !important;
+    }
+    
+    .swal2-cancel {
+      background: linear-gradient(135deg, #6c757d 0%, #5a6268 100%) !important;
+      border: none !important;
+      border-radius: 10px !important;
+      font-weight: 600 !important;
+      padding: 12px 24px !important;
+      font-family: 'Inter', sans-serif !important;
+      box-shadow: 0 4px 12px rgba(108, 117, 125, 0.4) !important;
+    }
+    
+    .swal2-cancel:hover {
+      transform: translateY(-2px) !important;
+      box-shadow: 0 6px 16px rgba(108, 117, 125, 0.5) !important;
+    }
+    
+    .order-completion-popup {
+      animation: slideInUp 0.4s ease-out !important;
+    }
+    
+    @keyframes slideInUp {
+      from {
+        transform: translateY(50px);
+        opacity: 0;
+      }
+      to {
+        transform: translateY(0);
+        opacity: 1;
+      }
+    }
+    
+    @keyframes bounce {
+      0%, 20%, 50%, 80%, 100% {
+        transform: translateY(0);
+      }
+      40% {
+        transform: translateY(-10px);
+      }
+      60% {
+        transform: translateY(-5px);
+      }
+    }
+    
+    .swal2-timer-progress-bar {
+      background: linear-gradient(135deg, #28a745 0%, #20c997 100%) !important;
+    }
+    
+    .swal2-icon.swal2-success {
+      border-color: #28a745 !important;
+      color: #28a745 !important;
+    }
+    
+    .swal2-icon.swal2-success .swal2-success-line {
+      background-color: #28a745 !important;
+    }
+    
+    .swal2-icon.swal2-success .swal2-success-ring {
+      border-color: rgba(40, 167, 69, 0.3) !important;
+    }
   </style>
 @endsection
 
-@section('content')
-<div class="order-payment-page">
-  <div class="content-area-fix">
-    <!-- Header -->
-    <div class="page-header-nya">
-      <button class="back-btn" onclick="history.back()">
-        <i class="bi bi-arrow-left"></i>
-      </button>
-      <h1 class="page-title">Order Payment</h1>
-    </div>
-
-    <!-- Order Summary -->
-    <div class="section-card">
-      <div class="section-header">
-        <i class="bi bi-receipt"></i>
-        Order Summary
-      </div>
-      <div class="section-content">
-        <div class="info-row">  
-          <span class="info-label">Sales Invoice:</span>
-          <span class="info-value" id="order-id">#ORD-001</span>
-        </div>
-        <div class="info-row">
-          <span class="info-label">Payment Method:</span>
-          <span class="info-value" id="payment-method">Cash on Delivery</span>
-        </div>
-        <div class="info-row">
-          <span class="info-label">Total Items:</span>
-          <span class="info-value" id="total-items">0</span>
-        </div>
-        <div class="info-row">
-          <span class="info-label">Total Amount:</span>
-          <span class="info-value" id="order-total">₱ 0.00</span>
-        </div>
-        
-        <!-- Order Items List -->
-        <div class="order-items" id="order-items-list">
-          <!-- Items will be populated by JavaScript -->
-        </div>
-      </div>
-    </div>
-
-    <!-- Payment Method Display -->
-    <div class="section-card">
-      <div class="section-header">
-        <i class="bi bi-credit-card"></i>
-        Payment Details
-      </div>
-      <div class="section-content">
-        <div class="form-group">
-          <label class="form-label">Selected Payment Method</label>
-          <div class="payment-method-display" id="payment-method-display">
-            <div class="payment-icon cod">
-              <i class="bi bi-cash-coin"></i>
-            </div>
-            <div class="payment-details">
-              <div class="payment-name">Cash on Delivery</div>
-              <div class="payment-desc">Customer pays upon delivery</div>
-            </div>
-          </div>
-        </div>
-
-        <!-- Payment Amount Input (for COD) -->
-        <div class="form-group" id="payment-amount-group">
-          <label class="form-label" for="payment-amount">Amount Received from Customer *</label>
-          <div class="currency-input">
-            <span class="currency-symbol">₱</span>
-            <input type="number" 
-                   id="payment-amount" 
-                   class="form-control" 
-                   step="0.01" 
-                   min="0" 
-                   placeholder="0.00"
-                   required>
-          </div>
-          
-          <!-- Change Calculation -->
-          <div class="change-calculation" id="change-display" style="display: none;">
-            <div class="change-amount" id="change-amount">Change: ₱ 0.00</div>
-          </div>
-        </div>
-
-        <!-- GCash Payment Status (for GCash) -->
-        <div class="form-group" id="gcash-status-group" style="display: none;">
-          <div class="gcash-status">
-            <div class="gcash-status-text">✓ GCash Payment Completed</div>
-            <div class="gcash-status-desc">Payment has been processed successfully via GCash</div>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <!-- Complete Order Button -->
-    <div class="complete-order-wrapper">
-      <button class="complete-order-btn" id="complete-order-btn">
-        <i class="bi bi-check-circle"></i>
-        Complete Order
-      </button>
-    </div>
-  </div>
-</div>
-@endsection
-
 @section('js')
+<!-- SweetAlert2 JS -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/limonte-sweetalert2/11.10.1/sweetalert2.all.min.js"></script>
+
 <script>
 document.addEventListener('DOMContentLoaded', function() {
     // Get order data from localStorage
@@ -503,8 +597,14 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     } catch (error) {
         console.error('Error loading order data:', error);
-        alert('Error loading order data. Please go back and try again.');
-        history.back();
+        Swal.fire({
+            title: 'Error Loading Data',
+            text: 'Error loading order data. Please go back and try again.',
+            icon: 'error',
+            confirmButtonText: 'Go Back'
+        }).then(() => {
+            history.back();
+        });
         return;
     }
 
@@ -627,7 +727,7 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
 
-    // Complete order functionality
+    // Complete order functionality (updated with SweetAlert2)
     completeOrderBtn.addEventListener('click', function() {
         const paymentMethod = orderData.payment_method || 'cod';
         let isValid = true;
@@ -638,7 +738,16 @@ document.addEventListener('DOMContentLoaded', function() {
             const totalAmount = orderData.total_amount || 0;
             
             if (receivedAmount < totalAmount) {
-                alert('Insufficient payment amount. Please enter the correct amount received from the customer.');
+                // Use SweetAlert2 for error message
+                Swal.fire({
+                    title: '⚠️ Insufficient Payment',
+                    text: 'Please enter the correct amount received from the customer.',
+                    icon: 'warning',
+                    confirmButtonText: 'OK',
+                    customClass: {
+                        popup: 'swal2-popup-custom'
+                    }
+                });
                 paymentAmountInput.focus();
                 return;
             }
@@ -654,7 +763,14 @@ document.addEventListener('DOMContentLoaded', function() {
         // Simulate order completion
         setTimeout(() => {
             // Add completion timestamp
-            orderData.completed_at = new Date().toISOString();
+            orderData.completed_at = new Date().toLocaleString('en-PH', {
+                year: 'numeric',
+                month: 'long', 
+                day: 'numeric',
+                hour: '2-digit',
+                minute: '2-digit',
+                hour12: true
+            });
             orderData.status = 'completed';
             
             // Store completed order
@@ -672,26 +788,243 @@ document.addEventListener('DOMContentLoaded', function() {
             localStorage.removeItem('cartTotal');
             localStorage.removeItem('cartItems');
             
-            // Redirect after delay
-            setTimeout(() => {
-                let alertMessage = `Order completed successfully!\n\nOrder ID: ${orderData.order_id}\nTotal: ₱${orderData.total_amount.toFixed(2)}`;
-                
-                if (paymentMethod === 'cod') {
-                    alertMessage += `\nReceived: ₱${orderData.received_amount.toFixed(2)}\nChange: ₱${orderData.change_amount.toFixed(2)}`;
-                } else if (paymentMethod === 'gcash') {
-                    alertMessage += '\nPayment Method: GCash (Completed)';
-                }
-                
-                alert(alertMessage);
-                
-                // Redirect to products page or dashboard
-                window.location.href = '/products'; // Adjust this route as needed
-            }, 1500);
+            // Show completion modal based on payment method
+            showOrderCompletion(orderData, paymentMethod);
+            
+            console.log('Completed Order Data:', orderData);
             
         }, 2000);
-        
-        console.log('Completed Order Data:', orderData);
     });
+
+    // Order completion display functions
+    function showOrderCompletion(orderData, paymentMethod) {
+        if (paymentMethod === 'gcash') {
+            showGCashOrderCompletion(orderData);
+        } else {
+            showCODOrderCompletion(orderData);
+        }
+    }
+
+    function showCODOrderCompletion(orderData) {
+        const totalItems = cartData.reduce((sum, item) => sum + item.quantity, 0);
+        
+        Swal.fire({
+            title: '🎉 Order Completed Successfully!',
+            html: `
+                <div style="text-align: left; margin: 20px 0;">
+                    <div style="background: #f8f9fa; padding: 20px; border-radius: 12px; margin-bottom: 15px;">
+                        <h4 style="margin: 0 0 15px 0; color: #28a745; font-weight: 700;">
+                            <i class="bi bi-receipt" style="margin-right: 8px;"></i>Order Details
+                        </h4>
+                        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px; font-size: 14px;">
+                            <div>
+                                <strong>Order ID:</strong><br>
+                                <span style="color: #4A90E2; font-weight: 600;">${orderData.order_id}</span>
+                            </div>
+                            <div>
+                                <strong>Total Items:</strong><br>
+                                <span style="color: #333;">${totalItems}</span>
+                            </div>
+                            <div>
+                                <strong>Completed:</strong><br>
+                                <span style="color: #333; font-size: 12px;">${orderData.completed_at}</span>
+                            </div>
+                            <div>
+                                <strong>Payment:</strong><br>
+                                <span style="color: #28a745; font-weight: 600;">Cash on Delivery</span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div style="background: #e8f4fd; border: 2px solid #4A90E2; padding: 20px; border-radius: 12px;">
+                        <h4 style="margin: 0 0 15px 0; color: #4A90E2; font-weight: 700;">
+                            <i class="bi bi-cash-stack" style="margin-right: 8px;"></i>Payment Summary
+                        </h4>
+                        <div style="font-size: 15px; line-height: 1.8;">
+                            <div style="display: flex; justify-content: space-between;">
+                                <span>Total Amount:</span>
+                                <strong style="color: #333;">₱${orderData.total_amount.toFixed(2)}</strong>
+                            </div>
+                            <div style="display: flex; justify-content: space-between;">
+                                <span>Amount Received:</span>
+                                <strong style="color: #28a745;">₱${orderData.received_amount.toFixed(2)}</strong>
+                            </div>
+                            <hr style="margin: 10px 0; border: 1px solid #4A90E2; opacity: 0.3;">
+                            <div style="display: flex; justify-content: space-between; font-size: 18px;">
+                                <span style="font-weight: 700;">Change to Return:</span>
+                                <strong style="color: #4A90E2; font-size: 20px;">₱${orderData.change_amount.toFixed(2)}</strong>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            `,
+            width: '500px',
+            showDenyButton: true,
+            showCancelButton: true,
+            confirmButtonText: '<i class="bi bi-printer"></i> Print Receipt',
+            denyButtonText: '<i class="bi bi-house-door"></i> Dashboard',
+            cancelButtonText: '<i class="bi bi-plus-circle"></i> New Order',
+            reverseButtons: false,
+            allowOutsideClick: false,
+            customClass: {
+                popup: 'order-completion-popup'
+            }
+        }).then((result) => {
+            if (result.isConfirmed) {
+                handlePrintReceipt(orderData);
+            } else if (result.isDenied) {
+                redirectToDashboard();
+            } else if (result.dismiss === Swal.DismissReason.cancel) {
+                redirectToNewOrder();
+            }
+        });
+    }
+
+    function showGCashOrderCompletion(orderData) {
+        const totalItems = cartData.reduce((sum, item) => sum + item.quantity, 0);
+        const transactionId = 'GC' + Date.now().toString().slice(-8);
+        
+        Swal.fire({
+            title: '🎉 Order Completed Successfully!',
+            html: `
+                <div style="text-align: left; margin: 20px 0;">
+                    <div style="background: #f8f9fa; padding: 20px; border-radius: 12px; margin-bottom: 15px;">
+                        <h4 style="margin: 0 0 15px 0; color: #28a745; font-weight: 700;">
+                            <i class="bi bi-receipt" style="margin-right: 8px;"></i>Order Details
+                        </h4>
+                        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px; font-size: 14px;">
+                            <div>
+                                <strong>Order ID:</strong><br>
+                                <span style="color: #4A90E2; font-weight: 600;">${orderData.order_id}</span>
+                            </div>
+                            <div>
+                                <strong>Total Items:</strong><br>
+                                <span style="color: #333;">${totalItems}</span>
+                            </div>
+                            <div>
+                                <strong>Completed:</strong><br>
+                                <span style="color: #333; font-size: 12px;">${orderData.completed_at}</span>
+                            </div>
+                            <div>
+                                <strong>Payment:</strong><br>
+                                <span style="color: #007DFF; font-weight: 600;">GCash</span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div style="background: #e8f4fd; border: 2px solid #007DFF; padding: 20px; border-radius: 12px;">
+                        <h4 style="margin: 0 0 15px 0; color: #007DFF; font-weight: 700;">
+                            <i class="bi bi-phone-fill" style="margin-right: 8px;"></i>GCash Payment Summary
+                        </h4>
+                        <div style="font-size: 15px; line-height: 1.8;">
+                            <div style="display: flex; justify-content: space-between;">
+                                <span>Total Amount:</span>
+                                <strong style="color: #007DFF; font-size: 18px;">₱${orderData.total_amount.toFixed(2)}</strong>
+                            </div>
+                            <div style="display: flex; justify-content: space-between; margin-top: 10px;">
+                                <span>Transaction ID:</span>
+                                <strong style="color: #333; font-family: monospace;">${transactionId}</strong>
+                            </div>
+                            <div style="background: #e8f5e8; padding: 15px; border-radius: 8px; margin-top: 15px; text-align: center;">
+                                <i class="bi bi-check-circle" style="color: #28a745; font-size: 24px; margin-bottom: 5px;"></i><br>
+                                <strong style="color: #28a745;">Payment Processed Successfully</strong>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            `,
+            width: '500px',
+            showDenyButton: true,
+            showCancelButton: true,
+            confirmButtonText: '<i class="bi bi-printer"></i> Print Receipt',
+            denyButtonText: '<i class="bi bi-house-door"></i> Dashboard',
+            cancelButtonText: '<i class="bi bi-plus-circle"></i> New Order',
+            reverseButtons: false,
+            allowOutsideClick: false,
+            customClass: {
+                popup: 'order-completion-popup'
+            }
+        }).then((result) => {
+            if (result.isConfirmed) {
+                handlePrintReceipt(orderData);
+            } else if (result.isDenied) {
+                redirectToDashboard();
+            } else if (result.dismiss === Swal.DismissReason.cancel) {
+                redirectToNewOrder();
+            }
+        });
+    }
+
+    function handlePrintReceipt(orderData) {
+        // Show printing animation
+        Swal.fire({
+            title: '🖨️ Printing Receipt...',
+            html: `
+                <div style="text-align: center; padding: 20px;">
+                    <div style="font-size: 48px; margin-bottom: 15px;">
+                        <i class="bi bi-printer" style="color: #4A90E2; animation: bounce 1s infinite;"></i>
+                    </div>
+                    <p style="color: #666; margin: 0;">Please wait while we prepare your receipt...</p>
+                </div>
+            `,
+            showConfirmButton: false,
+            timer: 3000,
+            timerProgressBar: true,
+            allowOutsideClick: false
+        }).then(() => {
+            // Show print success
+            Swal.fire({
+                title: '✅ Receipt Printed Successfully!',
+                text: 'Receipt has been sent to the printer.',
+                icon: 'success',
+                timer: 2000,
+                showConfirmButton: false,
+                timerProgressBar: true
+            }).then(() => {
+                // Ask what to do next
+                Swal.fire({
+                    title: 'What would you like to do next?',
+                    showDenyButton: true,
+                    confirmButtonText: '<i class="bi bi-plus-circle"></i> Create New Order',
+                    denyButtonText: '<i class="bi bi-house-door"></i> Return to Dashboard',
+                    reverseButtons: true,
+                    allowOutsideClick: false
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        redirectToNewOrder();
+                    } else {
+                        redirectToDashboard();
+                    }
+                });
+            });
+        });
+    }
+
+    function redirectToDashboard() {
+        Swal.fire({
+            title: '🏠 Redirecting to Dashboard...',
+            icon: 'success',
+            timer: 1500,
+            showConfirmButton: false,
+            timerProgressBar: true
+        }).then(() => {
+            // Replace with your actual dashboard route
+            window.location.href = "{{ route('home') }}";
+        });
+    }
+
+    function redirectToNewOrder() {
+        Swal.fire({
+            title: '🛒 Starting New Order...',
+            icon: 'success',
+            timer: 1500,
+            showConfirmButton: false,
+            timerProgressBar: true
+        }).then(() => {
+            // Replace with your actual products/new order route
+            window.location.href = "{{ url('products') }}";
+        });
+    }
 
     // Initialize the page
     initializeOrderPage();

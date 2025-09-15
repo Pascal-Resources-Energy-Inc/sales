@@ -227,7 +227,7 @@
 
 @section('content')
 <!-- Wrap the entire content in content-area class for proper bottom padding -->
-<div class="content-area">
+<div class="content-area mt-3">
     <section class="welcome">
         <div class="container-fluid" style="max-width: 1400px; margin: 0 auto;">
         <div class="row g-1">

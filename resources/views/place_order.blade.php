@@ -100,27 +100,30 @@
         <i class="bi bi-credit-card-fill"></i> Payment Method
       </div>
       <div class="payment-option">
-        <input type="radio" name="payment_method" value="cod" id="cod" checked>
-        <div class="payment-icon">
-          <i class="bi bi-cash-coin"></i>
-        </div>
-        <div class="payment-details">
-          <div class="payment-name">Cash on Delivery</div>
-          <div class="payment-desc">Pay when you receive your order</div>
-        </div>
+        <label>
+          <input type="radio" name="payment_method" value="cod" id="cod">
+          <div class="payment-icon">
+            <i class="bi bi-cash-coin"></i>
+          </div>
+          <div class="payment-details">
+            <div class="payment-name">Cash on Delivery</div>
+            <div class="payment-desc">Pay when you receive your order</div>
+          </div>
+        </label>
       </div>
-      <div class="payment-option">
-        <input type="radio" name="payment_method" value="gcash" id="gcash">
-        <div class="payment-icon" style="background: #007DFF; color: white;">
-          <i class="bi bi-phone-fill"></i>
-        </div>
-        <div class="payment-details">
-          <div class="payment-name">GCash</div>
-          <div class="payment-desc">Pay online via GCash</div>
-        </div>
-      </div>
-    </div>
 
+      <div class="payment-option">
+        <label>
+          <input type="radio" name="payment_method" value="gcash" id="gcash" checked>
+          <div class="payment-icon" style="background: #007DFF; color: white;">
+            <i class="bi bi-phone-fill"></i>
+          </div>
+          <div class="payment-details">
+            <div class="payment-name">GCash</div>
+            <div class="payment-desc">Pay online via GCash</div>
+          </div>
+        </label>
+      </div>
     <div class="place-order-wrapper">
       <button class="place-order-btn" id="place-order-btn">
         Place Order • <span id="final-total">₱ 0.00</span>
@@ -564,6 +567,19 @@
       transition: background-color 0.2s ease;
     }
 
+    .payment-option label {
+      display: flex;
+      align-items: center;
+      width: 100%;
+      cursor: pointer;
+    }
+
+    .payment-option input[type="radio"] {
+      margin-right: 15px;
+      transform: scale(1.2);
+      cursor: pointer;
+    }
+
     .payment-option:last-child {
       border-bottom: none;
     }
@@ -642,6 +658,7 @@
     }
     .place-order-btn {
       width: 100%;
+      margin-bottom: 20px;
       background: linear-gradient(135deg, #4A90E2 0%, #357abd 100%);
       color: #fff;
       border: none;
@@ -1182,537 +1199,574 @@
   </style>
 @endsection
 
-@section('javascript')
+@section('js')
 <script>
-    document.addEventListener('DOMContentLoaded', function() {
-        let dealerCartData = [];
-        
-        try {
-            const migratedData = migrateLegacyCartData();
-            if (migratedData) {
-                dealerCartData = migratedData;
+document.addEventListener('DOMContentLoaded', function() {
+    // ============= LOAD SELECTED MERCHANT =============
+    loadSelectedMerchant();
+    
+    let dealerCartData = [];
+    
+    try {
+        const migratedData = migrateLegacyCartData();
+        if (migratedData) {
+            dealerCartData = migratedData;
+        } else {
+            const storedDealerCartData = localStorage.getItem('dealerCartData');
+            if (storedDealerCartData) {
+                dealerCartData = JSON.parse(storedDealerCartData);
+                console.log('Parsed dealerCartData:', dealerCartData);
             } else {
-                const storedDealerCartData = localStorage.getItem('dealerCartData');
-                if (storedDealerCartData) {
-                    dealerCartData = JSON.parse(storedDealerCartData);
-                    console.log('Parsed dealerCartData:', dealerCartData);
-                } else {
-                    console.log('No dealerCartData found in localStorage');
+                console.log('No dealerCartData found in localStorage');
+            }
+        }
+    } catch (error) {
+        console.error('Error loading dealer cart data:', error);
+        dealerCartData = [];
+    }
+
+    let isSwipeActive = false;
+    let startX = 0;
+    let startY = 0;
+    let currentX = 0;
+    let currentY = 0;
+    let activeSwipeItem = null;
+    let swipeDirection = null;
+
+    const SWIPE_THRESHOLD = 50;
+    const MAX_SWIPE_DISTANCE = 120;
+    const MIN_MOVEMENT_THRESHOLD = 15;
+
+    // ============= MERCHANT SELECTION FUNCTIONS =============
+    function loadSelectedMerchant() {
+        try {
+            const selectedMerchantData = localStorage.getItem('selectedMerchant');
+            
+            if (selectedMerchantData) {
+                const merchant = JSON.parse(selectedMerchantData);
+                
+                const clientTitle = document.querySelector('.client-title');
+                if (clientTitle) {
+                    clientTitle.textContent = merchant.name;
+                }
+                
+                localStorage.setItem('currentMerchantId', merchant.id);
+                localStorage.setItem('currentMerchantName', merchant.name);
+                localStorage.setItem('currentMerchantCategory', merchant.category);
+                
+                console.log('Loaded merchant:', merchant);
+            } else {
+                console.log('No merchant selected');
+                const clientTitle = document.querySelector('.client-title');
+                if (clientTitle) {
+                    clientTitle.textContent = 'Select Merchant';
                 }
             }
         } catch (error) {
-            console.error('Error loading dealer cart data:', error);
-            dealerCartData = [];
+            console.error('Error loading merchant data:', error);
         }
+    }
 
-        let isSwipeActive = false;
-        let startX = 0;
-        let startY = 0;
-        let currentX = 0;
-        let currentY = 0;
-        let activeSwipeItem = null;
-        let swipeDirection = null;
+    function initSwipeListeners() {
+        document.querySelectorAll('.swipe-item').forEach(item => {
+            item.addEventListener('touchstart', handleTouchStart, { passive: true });
+            item.addEventListener('touchmove', handleTouchMove, { passive: false });
+            item.addEventListener('touchend', handleTouchEnd, { passive: true });
 
-        const SWIPE_THRESHOLD = 50;
-        const MAX_SWIPE_DISTANCE = 120;
-        const MIN_MOVEMENT_THRESHOLD = 15;
+            item.addEventListener('mousedown', handleMouseStart);
+            item.addEventListener('mousemove', handleMouseMove);
+            item.addEventListener('mouseup', handleMouseEnd);
+            item.addEventListener('mouseleave', handleMouseEnd);
+        });
+    }
 
-        function initSwipeListeners() {
-            document.querySelectorAll('.swipe-item').forEach(item => {
-                item.addEventListener('touchstart', handleTouchStart, { passive: true });
-                item.addEventListener('touchmove', handleTouchMove, { passive: false });
-                item.addEventListener('touchend', handleTouchEnd, { passive: true });
+    function shouldPreventSwipe(target) {
+        const preventSwipeElements = [
+            'input', 'button', 'select', 'textarea', 
+            '.qty-input', '.quantity-btn', '.plus-btn', '.minus-btn'
+        ];
+        
+        return preventSwipeElements.some(selector => {
+            if (selector.startsWith('.')) {
+                return target.classList.contains(selector.substring(1));
+            }
+            return target.tagName.toLowerCase() === selector;
+        }) || target.closest('.item-quantity');
+    }
 
-                item.addEventListener('mousedown', handleMouseStart);
-                item.addEventListener('mousemove', handleMouseMove);
-                item.addEventListener('mouseup', handleMouseEnd);
-                item.addEventListener('mouseleave', handleMouseEnd);
-            });
+    function handleTouchStart(e) {
+        if (shouldPreventSwipe(e.target)) {
+            return;
         }
+        
+        const touch = e.touches[0];
+        handleStart(touch.clientX, touch.clientY, e.currentTarget);
+    }
 
-        function shouldPreventSwipe(target) {
-            const preventSwipeElements = [
-                'input', 'button', 'select', 'textarea', 
-                '.qty-input', '.quantity-btn', '.plus-btn', '.minus-btn'
-            ];
+    function handleMouseStart(e) {
+        if (shouldPreventSwipe(e.target)) {
+            return;
+        }
+        
+        e.preventDefault();
+        handleStart(e.clientX, e.clientY, e.currentTarget);
+    }
+
+    function handleStart(clientX, clientY, element) {
+        if (activeSwipeItem && activeSwipeItem !== element) {
+            resetSwipe(activeSwipeItem);
+        }
+        
+        isSwipeActive = true;
+        startX = clientX;
+        startY = clientY;
+        currentX = clientX;
+        currentY = clientY;
+        activeSwipeItem = element;
+        swipeDirection = null;
+    }
+
+    function handleTouchMove(e) {
+        if (!isSwipeActive) return;
+        
+        const touch = e.touches[0];
+        currentX = touch.clientX;
+        currentY = touch.clientY;
+        
+        if (swipeDirection === null) {
+            const deltaX = Math.abs(currentX - startX);
+            const deltaY = Math.abs(currentY - startY);
             
-            return preventSwipeElements.some(selector => {
-                if (selector.startsWith('.')) {
-                    return target.classList.contains(selector.substring(1));
+            if (deltaX > MIN_MOVEMENT_THRESHOLD || deltaY > MIN_MOVEMENT_THRESHOLD) {
+                if (deltaX > deltaY) {
+                    swipeDirection = 'horizontal';
+                } else {
+                    swipeDirection = 'vertical';
                 }
-                return target.tagName.toLowerCase() === selector;
-            }) || target.closest('.item-quantity');
-        }
-
-        function handleTouchStart(e) {
-            if (shouldPreventSwipe(e.target)) {
-                return;
             }
-            
-            const touch = e.touches[0];
-            handleStart(touch.clientX, touch.clientY, e.currentTarget);
         }
-
-        function handleMouseStart(e) {
-            if (shouldPreventSwipe(e.target)) {
-                return;
-            }
-            
+        
+        if (swipeDirection === 'horizontal') {
             e.preventDefault();
-            handleStart(e.clientX, e.clientY, e.currentTarget);
-        }
-
-        function handleStart(clientX, clientY, element) {
-            if (activeSwipeItem && activeSwipeItem !== element) {
-                resetSwipe(activeSwipeItem);
-            }
-            
-            isSwipeActive = true;
-            startX = clientX;
-            startY = clientY;
-            currentX = clientX;
-            currentY = clientY;
-            activeSwipeItem = element;
+            handleMove();
+        } else if (swipeDirection === 'vertical') {
+            resetSwipe(activeSwipeItem);
+            isSwipeActive = false;
+            activeSwipeItem = null;
             swipeDirection = null;
         }
+    }
 
-        function handleTouchMove(e) {
-            if (!isSwipeActive) return;
-            
-            const touch = e.touches[0];
-            currentX = touch.clientX;
-            currentY = touch.clientY;
-            
-            if (swipeDirection === null) {
-                const deltaX = Math.abs(currentX - startX);
-                const deltaY = Math.abs(currentY - startY);
-                
-                if (deltaX > MIN_MOVEMENT_THRESHOLD || deltaY > MIN_MOVEMENT_THRESHOLD) {
-                    if (deltaX > deltaY) {
-                        swipeDirection = 'horizontal';
-                    } else {
-                        swipeDirection = 'vertical';
-                    }
-                }
-            }
-            
-            if (swipeDirection === 'horizontal') {
-                e.preventDefault();
-                handleMove();
-            } else if (swipeDirection === 'vertical') {
-                resetSwipe(activeSwipeItem);
-                isSwipeActive = false;
-                activeSwipeItem = null;
-                swipeDirection = null;
-            }
+    function handleMouseMove(e) {
+        if (!isSwipeActive) return;
+        
+        currentX = e.clientX;
+        currentY = e.clientY;
+        
+        e.preventDefault();
+        swipeDirection = 'horizontal';
+        handleMove();
+    }
+
+    function handleMove() {
+        const diffX = startX - currentX;
+        
+        if (diffX > 0 && diffX <= MAX_SWIPE_DISTANCE) {
+            activeSwipeItem.classList.add('swiping');
+            activeSwipeItem.style.transform = `translateX(-${diffX}px)`;
+        } else if (diffX <= 0) {
+            resetSwipe(activeSwipeItem);
+        } else if (diffX > MAX_SWIPE_DISTANCE) {
+            activeSwipeItem.style.transform = `translateX(-${MAX_SWIPE_DISTANCE}px)`;
         }
+    }
 
-        function handleMouseMove(e) {
-            if (!isSwipeActive) return;
-            
-            currentX = e.clientX;
-            currentY = e.clientY;
-            
-            e.preventDefault();
-            swipeDirection = 'horizontal';
-            handleMove();
+    function handleTouchEnd(e) {
+        handleEnd();
+    }
+
+    function handleMouseEnd(e) {
+        handleEnd();
+    }
+
+    function handleEnd() {
+        if (!isSwipeActive || !activeSwipeItem) return;
+        
+        isSwipeActive = false;
+        if (activeSwipeItem) {
+            activeSwipeItem.classList.remove('swiping');
         }
-
-        function handleMove() {
+        
+        if (swipeDirection === 'horizontal') {
             const diffX = startX - currentX;
             
-            if (diffX > 0 && diffX <= MAX_SWIPE_DISTANCE) {
-                activeSwipeItem.classList.add('swiping');
-                activeSwipeItem.style.transform = `translateX(-${diffX}px)`;
-            } else if (diffX <= 0) {
-                resetSwipe(activeSwipeItem);
-            } else if (diffX > MAX_SWIPE_DISTANCE) {
+            if (diffX > SWIPE_THRESHOLD) {
                 activeSwipeItem.style.transform = `translateX(-${MAX_SWIPE_DISTANCE}px)`;
-            }
-        }
-
-        function handleTouchEnd(e) {
-            handleEnd();
-        }
-
-        function handleMouseEnd(e) {
-            handleEnd();
-        }
-
-        function handleEnd() {
-            if (!isSwipeActive || !activeSwipeItem) return;
-            
-            isSwipeActive = false;
-            if (activeSwipeItem) {
-                activeSwipeItem.classList.remove('swiping');
-            }
-            
-            if (swipeDirection === 'horizontal') {
-                const diffX = startX - currentX;
-                
-                if (diffX > SWIPE_THRESHOLD) {
-                    activeSwipeItem.style.transform = `translateX(-${MAX_SWIPE_DISTANCE}px)`;
-                    activeSwipeItem.style.boxShadow = '-8px 0 16px rgba(0, 0, 0, 0.1)';
-                    if ('vibrate' in navigator) {
-                        navigator.vibrate(50);
-                    }
-                } else {
-                    resetSwipe(activeSwipeItem);
+                activeSwipeItem.style.boxShadow = '-8px 0 16px rgba(0, 0, 0, 0.1)';
+                if ('vibrate' in navigator) {
+                    navigator.vibrate(50);
                 }
-            }
-            
-            swipeDirection = null;
-        }
-
-        function resetSwipe(element) {
-            if (element) {
-                element.style.transform = 'translateX(0)';
-                element.style.boxShadow = '';
-                element.classList.remove('swiping');
+            } else {
+                resetSwipe(activeSwipeItem);
             }
         }
-
-        function resetAllSwipes() {
-            document.querySelectorAll('.swipe-item').forEach(item => {
-                resetSwipe(item);
-            });
-            activeSwipeItem = null;
-            isSwipeActive = false;
-            swipeDirection = null;
-        }
-
-        document.addEventListener('click', function(e) {
-            if (!e.target.closest('.swipe-container') && !e.target.closest('.delete-background')) {
-                resetAllSwipes();
-            }
-            if (shouldPreventSwipe(e.target)) {
-                resetAllSwipes();
-            }
-        });
-
-        let scrollTimer;
-        document.addEventListener('scroll', function() {
-            if (activeSwipeItem) {
-                resetAllSwipes();
-            }
-            
-            clearTimeout(scrollTimer);
-            scrollTimer = setTimeout(() => {
-                resetAllSwipes();
-            }, 100);
-        }, { passive: true });
-
-        document.addEventListener('keydown', function(e) {
-            if (e.key === 'Escape' && activeSwipeItem) {
-                resetAllSwipes();
-            }
-        });
-
-        window.updateQuantityFromInput = function(itemId, newQuantity) {
-            const quantity = parseInt(newQuantity);
-            
-            if (isNaN(quantity) || quantity < 1) {
-                const input = document.querySelector(`.qty-input[data-id="${itemId}"]`);
-                input.value = 1;
-                updateItemQuantity(itemId, 1);
-                return;
-            }
-            
-            if (quantity > 999) {
-                const input = document.querySelector(`.qty-input[data-id="${itemId}"]`);
-                input.value = 999;
-                updateItemQuantity(itemId, 999);
-                return;
-            }
-            
-            updateItemQuantity(itemId, quantity);
-        };
-
-        window.validateQuantityInput = function(input) {
-            const value = parseInt(input.value);
-            if (isNaN(value) || value < 1) {
-                input.value = 1;
-                updateQuantityFromInput(input.dataset.id, 1);
-            } else if (value > 999) {
-                input.value = 999;
-                updateQuantityFromInput(input.dataset.id, 999);
-            }
-        };
-
-        window.handleInputFocus = function(input) {
-            resetAllSwipes();
-            setTimeout(() => input.select(), 50);
-        };
         
-        // Updating the existing updateItemQuantity
-        function updateItemQuantity(itemId, newQuantity) {
-            const item = dealerCartData.find(item => item.id == itemId);
-            if (item) {
-                item.quantity = newQuantity;
-                localStorage.setItem('dealerCartData', JSON.stringify(dealerCartData));
-                
-                // Also update cartData for compatibility
-                localStorage.setItem('cartData', JSON.stringify(dealerCartData));
-                
-                updateCartStats();
-                updateOrderSummary();
-                updateQuantityDisplays();
-            }
-        } 
+        swipeDirection = null;
+    }
 
-        function migrateLegacyCartData() {
-            // Check if we have old cartData but no dealerCartData
-            if (!localStorage.getItem('dealerCartData') && localStorage.getItem('cartData')) {
-                try {
-                    const legacyData = JSON.parse(localStorage.getItem('cartData'));
-                    const migratedData = legacyData.map((item, index) => ({
-                        id: item.id || `migrated-${index}-${Date.now()}`,
-                        name: item.name,
-                        originalName: item.originalName || item.name,
-                        price: parseFloat(item.price),
-                        quantity: parseInt(item.quantity),
-                        image: item.image,
-                        color: item.color || null,
-                        buttonId: item.buttonId || null
-                    }));
-                    
-                    localStorage.setItem('dealerCartData', JSON.stringify(migratedData));
-                    console.log('Migrated legacy cart data:', migratedData);
-                    
-                    return migratedData;
-                } catch (error) {
-                    console.error('Error migrating legacy cart data:', error);
-                    return [];
-                }
-            }
-            return null;
+    function resetSwipe(element) {
+        if (element) {
+            element.style.transform = 'translateX(0)';
+            element.style.boxShadow = '';
+            element.classList.remove('swiping');
         }
+    }
 
-        function updateQuantityDisplays() {
-            dealerCartData.forEach(item => {
-                const input = document.querySelector(`.qty-input[data-id="${item.id}"]`);
-                if (input && input !== document.activeElement) {
-                    input.value = item.quantity;
-                }
-            });
+    function resetAllSwipes() {
+        document.querySelectorAll('.swipe-item').forEach(item => {
+            resetSwipe(item);
+        });
+        activeSwipeItem = null;
+        isSwipeActive = false;
+        swipeDirection = null;
+    }
+
+    document.addEventListener('click', function(e) {
+        if (!e.target.closest('.swipe-container') && !e.target.closest('.delete-background')) {
+            resetAllSwipes();
         }
+        if (shouldPreventSwipe(e.target)) {
+            resetAllSwipes();
+        }
+    });
 
-        function renderCartItems() {
-            const cartItemsContainer = document.getElementById('cart-items');
+    let scrollTimer;
+    document.addEventListener('scroll', function() {
+        if (activeSwipeItem) {
+            resetAllSwipes();
+        }
+        
+        clearTimeout(scrollTimer);
+        scrollTimer = setTimeout(() => {
+            resetAllSwipes();
+        }, 100);
+    }, { passive: true });
+
+    document.addEventListener('keydown', function(e) {
+        if (e.key === 'Escape' && activeSwipeItem) {
+            resetAllSwipes();
+        }
+    });
+
+    window.updateQuantityFromInput = function(itemId, newQuantity) {
+        const quantity = parseInt(newQuantity);
+        
+        if (isNaN(quantity) || quantity < 1) {
+            const input = document.querySelector(`.qty-input[data-id="${itemId}"]`);
+            input.value = 1;
+            updateItemQuantity(itemId, 1);
+            return;
+        }
+        
+        if (quantity > 999) {
+            const input = document.querySelector(`.qty-input[data-id="${itemId}"]`);
+            input.value = 999;
+            updateItemQuantity(itemId, 999);
+            return;
+        }
+        
+        updateItemQuantity(itemId, quantity);
+    };
+
+    window.validateQuantityInput = function(input) {
+        const value = parseInt(input.value);
+        if (isNaN(value) || value < 1) {
+            input.value = 1;
+            updateQuantityFromInput(input.dataset.id, 1);
+        } else if (value > 999) {
+            input.value = 999;
+            updateQuantityFromInput(input.dataset.id, 999);
+        }
+    };
+
+    window.handleInputFocus = function(input) {
+        resetAllSwipes();
+        setTimeout(() => input.select(), 50);
+    };
+    
+    function updateItemQuantity(itemId, newQuantity) {
+        const item = dealerCartData.find(item => item.id == itemId);
+        if (item) {
+            item.quantity = newQuantity;
+            localStorage.setItem('dealerCartData', JSON.stringify(dealerCartData));
+            localStorage.setItem('cartData', JSON.stringify(dealerCartData));
             
-            if (dealerCartData.length === 0) {
-                cartItemsContainer.innerHTML = `
-                    <div class="empty-cart">
-                        <i class="bi bi-cart-x"></i>
-                        <h3>Your cart is empty</h3>
-                        <p>Add some items to your cart to continue</p>
-                        <button class="continue-shopping-btn" onclick="window.location.href='{{ route('home')}}'">
-                            Continue Shopping
-                        </button>
+            updateCartStats();
+            updateOrderSummary();
+            updateQuantityDisplays();
+        }
+    } 
+
+    function migrateLegacyCartData() {
+        if (!localStorage.getItem('dealerCartData') && localStorage.getItem('cartData')) {
+            try {
+                const legacyData = JSON.parse(localStorage.getItem('cartData'));
+                const migratedData = legacyData.map((item, index) => ({
+                    id: item.id || `migrated-${index}-${Date.now()}`,
+                    name: item.name,
+                    originalName: item.originalName || item.name,
+                    price: parseFloat(item.price),
+                    quantity: parseInt(item.quantity),
+                    image: item.image,
+                    color: item.color || null,
+                    buttonId: item.buttonId || null
+                }));
+                
+                localStorage.setItem('dealerCartData', JSON.stringify(migratedData));
+                console.log('Migrated legacy cart data:', migratedData);
+                
+                return migratedData;
+            } catch (error) {
+                console.error('Error migrating legacy cart data:', error);
+                return [];
+            }
+        }
+        return null;
+    }
+
+    function updateQuantityDisplays() {
+        dealerCartData.forEach(item => {
+            const input = document.querySelector(`.qty-input[data-id="${item.id}"]`);
+            if (input && input !== document.activeElement) {
+                input.value = item.quantity;
+            }
+        });
+    }
+
+    function renderCartItems() {
+        const cartItemsContainer = document.getElementById('cart-items');
+        
+        if (dealerCartData.length === 0) {
+            cartItemsContainer.innerHTML = `
+                <div class="empty-cart">
+                    <i class="bi bi-cart-x"></i>
+                    <h3>Your cart is empty</h3>
+                    <p>Add some items to your cart to continue</p>
+                    <button class="continue-shopping-btn" onclick="window.location.href='{{ url('products')}}'">
+                        Continue Shopping
+                    </button>
+                </div>
+            `;
+            document.querySelector('.place-order-wrapper').style.display = 'none';
+            return;
+        }
+
+        let cartHTML = '';
+        dealerCartData.forEach(item => {
+            let colorIndicatorHTML = '';
+            if (item.color) {
+                colorIndicatorHTML = `
+                    <div class="color-indicator">
+                        <div class="color-dot ${item.color}"></div>
+                        <span>Color: ${item.color.charAt(0).toUpperCase() + item.color.slice(1)}</span>
                     </div>
                 `;
-                document.querySelector('.place-order-wrapper').style.display = 'none';
-                return;
             }
 
-            let cartHTML = '';
-            dealerCartData.forEach(item => {
-                let colorIndicatorHTML = '';
-                if (item.color) {
-                    colorIndicatorHTML = `
-                        <div class="color-indicator">
-                            <div class="color-dot ${item.color}"></div>
-                            <span>Color: ${item.color.charAt(0).toUpperCase() + item.color.slice(1)}</span>
-                        </div>
-                    `;
-                }
-
-                cartHTML += `
-                    <div class="swipe-container">
-                        <div class="delete-background" onclick="removeItemWithAnimation('${item.id}')">
-                            <i class="bi bi-trash"></i>
-                        </div>
-                        <div class="swipe-item" data-id="${item.id}">
-                            <div class="cart-item">
-                                <div class="item-image">
-                                    <img src="${item.image}" alt="${item.originalName || item.name}">
-                                </div>
-                                <div class="item-details">
-                                    <div class="item-name">${item.originalName || item.name}</div>
-                                    ${colorIndicatorHTML}
-                                    <div class="item-price">₱ ${item.price.toFixed(2)}</div>
-                                    <div class="item-quantity">
-                                        <button class="quantity-btn minus-btn" data-id="${item.id}">−</button>
-                                        <input type="number" 
-                                              class="qty-input" 
-                                              value="${item.quantity}" 
-                                              min="1" 
-                                              max="999"
-                                              data-id="${item.id}"
-                                              oninput="handleQuantityInput(this)"
-                                              onchange="updateQuantityFromInput('${item.id}', this.value)"
-                                              onblur="validateQuantityInput(this)"
-                                              onfocus="handleInputFocus(this)">
-                                        <button class="quantity-btn plus-btn" data-id="${item.id}">+</button>
-                                    </div>
+            cartHTML += `
+                <div class="swipe-container">
+                    <div class="delete-background" onclick="removeItemWithAnimation('${item.id}')">
+                        <i class="bi bi-trash"></i>
+                    </div>
+                    <div class="swipe-item" data-id="${item.id}">
+                        <div class="cart-item">
+                            <div class="item-image">
+                                <img src="${item.image}" alt="${item.originalName || item.name}">
+                            </div>
+                            <div class="item-details">
+                                <div class="item-name">${item.originalName || item.name}</div>
+                                ${colorIndicatorHTML}
+                                <div class="item-price">₱ ${item.price.toFixed(2)}</div>
+                                <div class="item-quantity">
+                                    <button class="quantity-btn minus-btn" data-id="${item.id}">−</button>
+                                    <input type="number" 
+                                          class="qty-input" 
+                                          value="${item.quantity}" 
+                                          min="1" 
+                                          max="999"
+                                          data-id="${item.id}"
+                                          oninput="handleQuantityInput(this)"
+                                          onchange="updateQuantityFromInput('${item.id}', this.value)"
+                                          onblur="validateQuantityInput(this)"
+                                          onfocus="handleInputFocus(this)">
+                                    <button class="quantity-btn plus-btn" data-id="${item.id}">+</button>
                                 </div>
                             </div>
                         </div>
                     </div>
-                `;
+                </div>
+            `;
+        });
+
+        cartItemsContainer.innerHTML = cartHTML;
+
+        initSwipeListeners();
+
+        document.querySelectorAll('.minus-btn').forEach(btn => {
+            btn.addEventListener('click', function(e) {
+                e.stopPropagation();
+                resetAllSwipes();
+                const itemId = this.dataset.id;
+                const currentInput = document.querySelector(`.qty-input[data-id="${itemId}"]`);
+                const currentQty = parseInt(currentInput.value);
+                if (currentQty > 1) {
+                    updateItemQuantity(itemId, currentQty - 1);
+                }
             });
+        });
 
-            cartItemsContainer.innerHTML = cartHTML;
-
-            initSwipeListeners();
-
-            document.querySelectorAll('.minus-btn').forEach(btn => {
-                btn.addEventListener('click', function(e) {
-                    e.stopPropagation();
-                    resetAllSwipes();
-                    const itemId = this.dataset.id;
-                    const currentInput = document.querySelector(`.qty-input[data-id="${itemId}"]`);
-                    const currentQty = parseInt(currentInput.value);
-                    if (currentQty > 1) {
-                        updateItemQuantity(itemId, currentQty - 1);
-                    }
-                });
+        document.querySelectorAll('.plus-btn').forEach(btn => {
+            btn.addEventListener('click', function(e) {
+                e.stopPropagation();
+                resetAllSwipes();
+                const itemId = this.dataset.id;
+                const currentInput = document.querySelector(`.qty-input[data-id="${itemId}"]`);
+                const currentQty = parseInt(currentInput.value);
+                if (currentQty < 999) {
+                    updateItemQuantity(itemId, currentQty + 1);
+                }
             });
+        });
 
-            document.querySelectorAll('.plus-btn').forEach(btn => {
-                btn.addEventListener('click', function(e) {
-                    e.stopPropagation();
-                    resetAllSwipes();
-                    const itemId = this.dataset.id;
-                    const currentInput = document.querySelector(`.qty-input[data-id="${itemId}"]`);
-                    const currentQty = parseInt(currentInput.value);
-                    if (currentQty < 999) {
-                        updateItemQuantity(itemId, currentQty + 1);
-                    }
-                });
-            });
-
-            const placeOrderWrapper = document.querySelector('.place-order-wrapper');
-            if (placeOrderWrapper) {
-                placeOrderWrapper.style.display = 'block';
-            }
+        const placeOrderWrapper = document.querySelector('.place-order-wrapper');
+        if (placeOrderWrapper) {
+            placeOrderWrapper.style.display = 'block';
         }
+    }
 
-        // confirmation for deleting a product
-        window.removeItemWithAnimation = function(itemId) {
-          const swipeContainer = document.querySelector(`[data-id="${itemId}"]`).closest('.swipe-container');
+    window.removeItemWithAnimation = function(itemId) {
+      const swipeContainer = document.querySelector(`[data-id="${itemId}"]`).closest('.swipe-container');
+      
+      if (confirm('Are you sure you want to remove this item from your cart?')) {
+          swipeContainer.style.transition = 'all 0.3s ease';
+          swipeContainer.style.transform = 'translateX(-100%)';
+          swipeContainer.style.opacity = '0';
           
-          if (confirm('Are you sure you want to remove this item from your cart?')) {
-              swipeContainer.style.transition = 'all 0.3s ease';
-              swipeContainer.style.transform = 'translateX(-100%)';
-              swipeContainer.style.opacity = '0';
-              
-              setTimeout(() => {
-                  removeItem(itemId);
-              }, 300);
-          } else {
-              if (typeof resetAllSwipes === 'function') {
-                  resetAllSwipes();
-              }
+          setTimeout(() => {
+              removeItem(itemId);
+          }, 300);
+      } else {
+          if (typeof resetAllSwipes === 'function') {
+              resetAllSwipes();
           }
-      };
+      }
+    };
 
-      // listener to handle quantity input changes - for product you add
-      window.handleQuantityInput = function(input) {
-          const value = parseInt(input.value);
-          const itemId = input.dataset.id;
-          
-          if (isNaN(value) || value < 1) {
-              input.value = 1;
-              updateItemQuantity(itemId, 1);
-          } else if (value > 999) {
-              input.value = 999;
-              updateItemQuantity(itemId, 999);
-          } else {
-              updateItemQuantity(itemId, value);
-          }
-      };
-
-        function removeItem(itemId) {
-            dealerCartData = dealerCartData.filter(item => item.id != itemId);
-            localStorage.setItem('dealerCartData', JSON.stringify(dealerCartData));
-            
-            // Also update cartData for compatibility
-            localStorage.setItem('cartData', JSON.stringify(dealerCartData));
-            
-            updateCartStats();
-            renderCartItems();
-            updateOrderSummary();
+    window.handleQuantityInput = function(input) {
+        const value = parseInt(input.value);
+        const itemId = input.dataset.id;
+        
+        if (isNaN(value) || value < 1) {
+            input.value = 1;
+            updateItemQuantity(itemId, 1);
+        } else if (value > 999) {
+            input.value = 999;
+            updateItemQuantity(itemId, 999);
+        } else {
+            updateItemQuantity(itemId, value);
         }
+    };
 
-        function updateCartStats() {
-            const totalItems = dealerCartData.reduce((sum, item) => sum + item.quantity, 0);
-            const totalAmount = dealerCartData.reduce((sum, item) => sum + (item.price * item.quantity), 0);
-            
-            localStorage.setItem('dealerCartItems', totalItems.toString());
-            localStorage.setItem('dealerCartTotal', totalAmount.toFixed(2));
-            
-            localStorage.setItem('cartItems', totalItems.toString());
-            localStorage.setItem('cartTotal', totalAmount.toFixed(2));
-            
-            if (typeof triggerCartBadgeUpdate === 'function') {
-                triggerCartBadgeUpdate();
-            }
-        }
-
-        function updateOrderSummary() {
-            const subtotal = dealerCartData.reduce((sum, item) => sum + (item.price * item.quantity), 0);
-            const total = subtotal;
-
-            const subtotalElement = document.getElementById('subtotal');
-            const totalFinalElement = document.getElementById('total-final');
-            const finalTotalElement = document.getElementById('final-total');
-
-            if (subtotalElement) subtotalElement.textContent = `₱ ${subtotal.toFixed(2)}`;
-            if (totalFinalElement) totalFinalElement.textContent = `₱ ${total.toFixed(2)}`;
-            if (finalTotalElement) finalTotalElement.textContent = `₱ ${total.toFixed(2)}`;
-        }
-
-        const placeOrderBtn = document.getElementById('place-order-btn');
-          if (placeOrderBtn) {
-              placeOrderBtn.addEventListener('click', function() {
-                  if (dealerCartData.length === 0) {
-                      alert('Your cart is empty. Please add some items first.');
-                      return;
-                  }
-
-                  const paymentMethodElement = document.querySelector('input[name="payment_method"]:checked');
-                  const paymentMethod = paymentMethodElement ? paymentMethodElement.value : 'cod';
-                  
-                  console.log('Selected payment method:', paymentMethod);
-                  console.log('Payment method element:', paymentMethodElement);
-                  
-                  const orderData = {
-                      items: dealerCartData,
-                      payment_method: paymentMethod,
-                      subtotal: dealerCartData.reduce((sum, item) => sum + (item.price * item.quantity), 0),
-                      total: dealerCartData.reduce((sum, item) => sum + (item.price * item.quantity), 0),
-                      order_notes: document.getElementById('order-notes') ? document.getElementById('order-notes').value : ''
-                  };
-
-                  localStorage.setItem('dealerOrderData', JSON.stringify(orderData));
-
-                  this.disabled = true;
-                  this.innerHTML = 'Processing... <i class="bi bi-hourglass-split"></i>';
-
-                  setTimeout(() => {
-                      window.location.href = "{{ route('order-payment') }}";
-                  }, 1000);
-
-                  console.log('Dealer Order Data:', orderData);
-              });
-          }
-
+    function removeItem(itemId) {
+        dealerCartData = dealerCartData.filter(item => item.id != itemId);
+        localStorage.setItem('dealerCartData', JSON.stringify(dealerCartData));
+        localStorage.setItem('cartData', JSON.stringify(dealerCartData));
+        
+        updateCartStats();
         renderCartItems();
         updateOrderSummary();
-    });
-</script>
+    }
 
+    function updateCartStats() {
+        const totalItems = dealerCartData.reduce((sum, item) => sum + item.quantity, 0);
+        const totalAmount = dealerCartData.reduce((sum, item) => sum + (item.price * item.quantity), 0);
+        
+        localStorage.setItem('dealerCartItems', totalItems.toString());
+        localStorage.setItem('dealerCartTotal', totalAmount.toFixed(2));
+        
+        localStorage.setItem('cartItems', totalItems.toString());
+        localStorage.setItem('cartTotal', totalAmount.toFixed(2));
+        
+        if (typeof triggerCartBadgeUpdate === 'function') {
+            triggerCartBadgeUpdate();
+        }
+    }
+
+    function updateOrderSummary() {
+        const subtotal = dealerCartData.reduce((sum, item) => sum + (item.price * item.quantity), 0);
+        const total = subtotal;
+
+        const subtotalElement = document.getElementById('subtotal');
+        const totalFinalElement = document.getElementById('total-final');
+        const finalTotalElement = document.getElementById('final-total');
+
+        if (subtotalElement) subtotalElement.textContent = `₱ ${subtotal.toFixed(2)}`;
+        if (totalFinalElement) totalFinalElement.textContent = `₱ ${total.toFixed(2)}`;
+        if (finalTotalElement) finalTotalElement.textContent = `₱ ${total.toFixed(2)}`;
+    }
+
+    const placeOrderBtn = document.getElementById('place-order-btn');
+    if (placeOrderBtn) {
+        placeOrderBtn.addEventListener('click', function() {
+            if (dealerCartData.length === 0) {
+                alert('Your cart is empty. Please add some items first.');
+                return;
+            }
+
+            const merchantId = localStorage.getItem('currentMerchantId');
+            const merchantName = localStorage.getItem('currentMerchantName');
+            
+            if (!merchantId || !merchantName) {
+                alert('Please select a merchant before placing an order.');
+                localStorage.setItem('returnToCart', 'true');
+                window.location.href = "{{ route('merchants') }}";
+                return;
+            }
+
+            const paymentMethodElement = document.querySelector('input[name="payment_method"]:checked');
+            const paymentMethod = paymentMethodElement ? paymentMethodElement.value : 'cod';
+            
+            console.log('Selected payment method:', paymentMethod);
+            console.log('Payment method element:', paymentMethodElement);
+            
+            const orderData = {
+                merchant_id: merchantId,
+                merchant_name: merchantName,
+                merchant_category: localStorage.getItem('currentMerchantCategory'),
+                items: dealerCartData,
+                payment_method: paymentMethod,
+                subtotal: dealerCartData.reduce((sum, item) => sum + (item.price * item.quantity), 0),
+                total: dealerCartData.reduce((sum, item) => sum + (item.price * item.quantity), 0),
+                order_notes: document.getElementById('order-notes') ? document.getElementById('order-notes').value : ''
+            };
+
+            localStorage.setItem('dealerOrderData', JSON.stringify(orderData));
+
+            this.disabled = true;
+            this.innerHTML = 'Processing... <i class="bi bi-hourglass-split"></i>';
+
+            setTimeout(() => {
+                window.location.href = "{{ route('order-payment') }}";
+            }, 1000);
+
+            console.log('Dealer Order Data:', orderData);
+        });
+    }
+
+    renderCartItems();
+    updateOrderSummary();
+});
+</script>
 
 <script>
 function openDeliveryOptions() {
@@ -1832,13 +1886,13 @@ document.addEventListener('DOMContentLoaded', function() {
             }
         });
     }
+    
     document.addEventListener('keydown', function(e) {
         if (e.key === 'Escape') {
             closeClientModal();
         }
     });
 });
-
 
 document.addEventListener('DOMContentLoaded', function() {
     const savedDeliveryMethod = localStorage.getItem('deliveryMethod');
@@ -1906,6 +1960,7 @@ document.addEventListener('DOMContentLoaded', function() {
       }, 1000);
     });
   }
+  
   const addCustomerModal = document.getElementById('addCustomerModal');
   if (addCustomerModal) {
     addCustomerModal.addEventListener('click', function(e) {
@@ -1914,8 +1969,9 @@ document.addEventListener('DOMContentLoaded', function() {
       }
     });
   }
+  
   document.addEventListener('keydown', function(e) {
-    if (e.key === 'Escape' && document.getElementById('addCustomerModal').classList.contains('active')) {
+    if (e.key === 'Escape' && document.getElementById('addCustomerModal') && document.getElementById('addCustomerModal').classList.contains('active')) {
       closeAddCustomerModal();
     }
   });
@@ -1937,7 +1993,9 @@ document.addEventListener('DOMContentLoaded', function() {
   const numberInput = document.getElementById('customerNumber');
   if (numberInput) {
     numberInput.addEventListener('input', function() {
+      formatPhoneNumber(this);
     });
   }
 });
-</script>   
+</script>
+@endsection

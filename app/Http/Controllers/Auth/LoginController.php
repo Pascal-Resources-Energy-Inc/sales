@@ -36,4 +36,17 @@ class LoginController extends Controller
     {
         $this->middleware('guest')->except('logout');
     }
+
+    protected function authenticated($request, $user)
+    {
+        if ($user->role === 'dealer') {
+            auth()->logout();
+            return redirect('/login')->withErrors([
+                'email' => 'Login failed. Please check your credentials and try again.',
+            ]);
+        }
+
+        return redirect()->intended($this->redirectTo);
+    }
+
 }

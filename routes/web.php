@@ -17,6 +17,13 @@ Route::get('/', function () {
 
 Auth::routes();
 
+Route::get('password/reset', 'Auth\ForgotPasswordController@showLinkRequestForm')->name('password.request');
+Route::post('password/email', 'Auth\ForgotPasswordController@sendResetLinkEmail')->name('password.email');
+Route::get('password/otp', 'Auth\ForgotPasswordController@showOtpForm')->name('password.otp');
+Route::post('password/verify-otp', 'Auth\ForgotPasswordController@verifyOtp')->name('password.verify-otp');
+Route::get('password/reset/form', 'Auth\ForgotPasswordController@showResetForm')->name('password.reset.form');
+Route::post('password/update', 'Auth\ForgotPasswordController@reset')->name('password.update');
+
 Route::get('/home', 'HomeController@index')->name('home');
 
 // Product routes

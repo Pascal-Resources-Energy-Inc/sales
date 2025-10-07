@@ -47,9 +47,9 @@
       overflow-x: hidden;
       margin: 0;
       background: #f8f9fa;
-      font-family: Arial, sans-serif;
-      padding-top: 60px; /* Top navbar space */
-      padding-bottom: 70px; /* Bottom navbar space */
+      font-family: 'Poppins', Arial, sans-serif !important;
+      padding-top: 60px;
+      padding-bottom: 70px;
       overflow-x: hidden;
     }
 
@@ -369,7 +369,6 @@
     padding-bottom: 70px !important; 
     }
 
-  /* Header styling - positioned within content area */
     .page-header {
       background: #fff;
       padding: 20px 20px;
@@ -406,27 +405,22 @@
       transform: translateX(-50%);
     }
 
-    /* ===== Modern Bottom Navigation ===== */
     .bottom-nav {
         position: fixed;
         bottom: 0;
         left: 0;
         width: 100%;
-        height: 80px;
+        height: 70px;
         background: white;
         border-top: 1px solid #e9ecef;
         display: flex;
         justify-content: space-around;
         align-items: center;
-        box-shadow: 0 -2px 20px rgba(0,0,0,0.1);
+        box-shadow: 0 -2px 10px rgba(0,0,0,0.1);
         z-index: 1000;
         padding: 0;
     }
-        
-    .bottom-nav .under {
-        margin-bottom: 5px;
-    }
-    
+
     .nav-item {
         flex: 1;
         display: flex !important;
@@ -434,91 +428,58 @@
         align-items: center;
         justify-content: center;
         text-decoration: none;
-        color: #999;
+        color: #998;
         font-size: 11px;
         font-weight: 500;
-        height: 100%;
         padding: 8px 2px;
-        box-sizing: border-box;
         transition: all 0.3s ease;
-        position: relative;
-        min-width: 0;
     }
 
     .nav-item i {
-        font-size: 20px !important;
+        font-size: 22px !important;
         margin-bottom: 4px !important;
-        line-height: 1 !important;
-        width: 20px;
-        height: 24px;
-        display: flex;
-        align-items: center;
-        justify-content: center;
     }
 
-    /* Active State */
-    .bottom-nav .nav-item.active,
-    .bottom-nav .nav-item:hover {
-      color: #4facfe;
-    }
-
-    .bottom-nav .nav-item.active i,
-    .bottom-nav .nav-item:hover i {
-      color: #4facfe;
+    .nav-item.active,
+    .nav-item:hover {
+        color: #4facfe;
     }
 
     .qr-icon-up {
-      position: absolute;
-      bottom: 25px;
-      left: 50%;
-      transform: translateX(-50%);
-      text-align: center;
-      text-decoration: none;
-      color: #5bc2e7;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      z-index: 1100;
-      cursor: pointer;
+        position: absolute;
+        top: -30px;
+        left: 50%;
+        transform: translateX(-50%);
+        text-align: center;
+        text-decoration: none;
+        z-index: 1100;
+        cursor: pointer;
     }
 
-    /* The circle around the QR icon */
     .icon-wrapper {
-      width: 50px;
-      height: 50px !important;
-      border: 2px solid #5bc2e7;
-      border-radius: 50%;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      margin-bottom: 6px;
-      background: #fff;
-      transition: all 0.3s ease;
-      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15); /* Subtle shadow */
+        width: 60px;
+        height: 60px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: linear-gradient(135deg, #5BC2E7 0%, #4facfe 100%);
+        border: 4px solid #f8f9faff;
+        transition: all 0.3s ease;
     }
 
     .qr-icon-up i {
-      font-size: 22px;
-      color: #5bc2e7;
+        font-size: 20px;
+        color: white;
     }
 
     .qr-icon-up span {
-      font-size: 12px;
-      font-weight: 500;
-      color: #5bc2e7;
+        font-size: 12px;
+        color: #998;
     }
 
-    /* Hover effects */
     .qr-icon-up:hover .icon-wrapper {
-      background-color: #5bc2e7;
-    }
-
-    .qr-icon-up:hover i {
-      color: #fff;
-    }
-
-    .qr-icon-up:hover span {
-      color: #5bc2e7;
+        transform: translateY(-3px);
     }
 
     /* QR Camera Modal Styles */

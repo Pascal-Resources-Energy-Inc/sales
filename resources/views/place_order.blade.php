@@ -1,27 +1,26 @@
-<!-- place_order blade -->
 @extends('layouts.header')
 @section('content')
 <div class="place-order-page">
   <div class="content-area-fix">
-    <div class="page-header">
-      <button class="back-btn" onclick="history.back()">
+    <div class="page-header d-flex align-items-center position-relative px-3 py-3">
+      <button class="back-btn btn btn-link p-0 border-0" onclick="history.back()">
         <i class="bi bi-arrow-left"></i>
       </button>
-      <h1 class="page-title">Order Summary</h1>
+      <h1 class="page-title mb-0">Order Summary</h1>
     </div>
 
-    <div class="client-header" onclick="window.location.href='{{ route('merchants') }}'">
-      <h2 class="client-title">Merchants</h2>
+    <div class="client-header d-flex align-items-center justify-content-between" onclick="window.location.href='{{ route('merchants') }}'">
+      <h2 class="client-title mb-0">Merchants</h2>
       <i class="bi bi-chevron-right client-arrow"></i>
     </div>
     
     <div class="client-section">
       <div class="client-content">
-        <div class="assigned-ads-card">
-          <div class="ads-icon">
+        <div class="assigned-ads-card d-flex align-items-center">
+          <div class="ads-icon d-flex align-items-center justify-content-center">
             <img class="rider" src="{{ asset('images/riders.png') }}" alt="Rider">
           </div>
-          <div class="ads-info">
+          <div class="ads-info flex-grow-1">
             <div class="ads-label">Assigned ADS</div>
             <div class="ads-name" id="assigned-ads-name">YULIVER BALBANERO</div>
             <div class="ads-change" onclick="openDeliveryOptions()">Change</div>
@@ -30,31 +29,31 @@
       </div>
     </div>
 
-    <div class="modal-overlay" id="clientModal">
-      <div class="modal-content">
-        <div class="modal-header">
-          <h2 class="modal-title">Choose</h2>
-          <button class="modal-close" onclick="closeClientModal()">
+    <div class="modal-overlay d-flex align-items-end" id="clientModal">
+      <div class="modal-content w-100">
+        <div class="modal-header d-flex align-items-center justify-content-between">
+          <h2 class="modal-title mb-0">Choose</h2>
+          <button class="modal-close btn btn-link p-0 border-0" onclick="closeClientModal()">
             <i class="bi bi-x"></i>
           </button>
         </div>
         <div class="modal-body">
-          <div class="delivery-option selected" onclick="selectDeliveryOption(this, 'pickup')">
-            <input type="radio" name="delivery_method" value="pickup" checked>
-            <div class="delivery-option-content">
+          <div class="delivery-option selected d-flex align-items-center" onclick="selectDeliveryOption(this, 'pickup')">
+            <input type="radio" name="delivery_method" value="pickup" checked class="me-3">
+            <div class="delivery-option-content flex-grow-1">
               <div class="delivery-option-title">Pick-up</div>
             </div>
           </div>
-          <div class="delivery-option" onclick="selectDeliveryOption(this, 'delivery')">
-            <input type="radio" name="delivery_method" value="delivery">
-            <div class="delivery-option-content">
+          <div class="delivery-option d-flex align-items-center" onclick="selectDeliveryOption(this, 'delivery')">
+            <input type="radio" name="delivery_method" value="delivery" class="me-3">
+            <div class="delivery-option-content flex-grow-1">
               <div class="delivery-option-title">Delivery</div>
             </div>
           </div>
           
           <div class="pickup-date-section">
             <div class="pickup-date-label">Pick-up Date</div>
-            <select class="date-selector" id="pickupDate">
+            <select class="date-selector form-select" id="pickupDate">
               <option value="21-june-2020">21 June 2020</option>
               <option value="22-june-2020">22 June 2020</option>
               <option value="23-june-2020">23 June 2020</option>
@@ -62,7 +61,7 @@
             </select>
           </div>
           
-          <button class="update-btn" onclick="updateClientSelection()">
+          <button class="update-btn btn btn-primary w-100" onclick="updateClientSelection()">
             Update
           </button>
         </div>
@@ -70,9 +69,9 @@
     </div>
 
     <div class="cart-section">
-      <div class="section-header">
+      <div class="section-header d-flex justify-content-between align-items-center">
         <span><i class="bi bi-cart-fill"></i> Cart Items</span>
-        <a href="{{ url('products') }}" class="add-more">+ Add More</a>
+        <a href="{{ url('products') }}" class="add-more text-decoration-none">+ Add More</a>
       </div>
       <div id="cart-items"></div>
     </div>
@@ -81,15 +80,15 @@
       <div class="section-header">
         <i class="bi bi-receipt"></i> Order Summary
       </div>
-      <div class="summary-row">
+      <div class="summary-row d-flex justify-content-between align-items-center">
         <span class="summary-label">Subtotal:</span>
         <span class="summary-value" id="subtotal">₱ 0.00</span>
       </div>
-      <div class="summary-row">
+      <div class="summary-row d-flex justify-content-between align-items-center">
         <span class="summary-label">Discount:</span>
-        <span class="summary-value" id="subtotal">₱ 0.00</span>
+        <span class="summary-value" id="discount">₱ 0.00</span>
       </div>
-      <div class="summary-row total">
+      <div class="summary-row total d-flex justify-content-between align-items-center">
         <span class="summary-label">Total Amount:</span>
         <span class="summary-value" id="total-final">₱ 0.00</span>
       </div>
@@ -100,12 +99,12 @@
         <i class="bi bi-credit-card-fill"></i> Payment Method
       </div>
       <div class="payment-option">
-        <label>
-          <input type="radio" name="payment_method" value="cod" id="cod">
-          <div class="payment-icon">
+        <label class="d-flex align-items-center w-100 mb-0">
+          <input type="radio" name="payment_method" value="cod" id="cod" class="me-3">
+          <div class="payment-icon d-flex align-items-center justify-content-center">
             <i class="bi bi-cash-coin"></i>
           </div>
-          <div class="payment-details">
+          <div class="payment-details flex-grow-1">
             <div class="payment-name">Cash on Delivery</div>
             <div class="payment-desc">Pay when you receive your order</div>
           </div>
@@ -113,19 +112,21 @@
       </div>
 
       <div class="payment-option">
-        <label>
-          <input type="radio" name="payment_method" value="gcash" id="gcash" checked>
-          <div class="payment-icon" style="background: #007DFF; color: white;">
+        <label class="d-flex align-items-center w-100 mb-0">
+          <input type="radio" name="payment_method" value="gcash" id="gcash" checked class="me-3">
+          <div class="payment-icon d-flex align-items-center justify-content-center" style="background: #007DFF; color: white;">
             <i class="bi bi-phone-fill"></i>
           </div>
-          <div class="payment-details">
+          <div class="payment-details flex-grow-1">
             <div class="payment-name">GCash</div>
             <div class="payment-desc">Pay online via GCash</div>
           </div>
         </label>
       </div>
+    </div>
+
     <div class="place-order-wrapper">
-      <button class="place-order-btn" id="place-order-btn">
+      <button class="place-order-btn btn w-100" id="place-order-btn">
         Place Order • <span id="final-total">₱ 0.00</span>
       </button>
     </div>
@@ -588,11 +589,6 @@
       background: #f8f9fa;
     }
 
-    .payment-option input[type="radio"] {
-      margin-right: 15px;
-      transform: scale(1.2);
-    }
-
     .payment-icon {
       width: 40px;
       height: 40px;
@@ -752,24 +748,6 @@
       box-shadow: -8px 0 16px rgba(0, 0, 0, 0.1);
     }
 
-    /* Responsive adjustments for mobile */
-    @media (max-width: 480px) {
-      .delete-background {
-        width: 100px; /* Slightly smaller on mobile */
-        font-size: 20px;
-      }
-      
-      .delete-background::after {
-        font-size: 10px;
-        margin-left: 6px;
-      }
-      
-      .swipe-hint {
-        right: 120px;
-        font-size: 11px;
-      }
-    }
-
     .modal-overlay {
         position: fixed;
         top: 0;
@@ -926,214 +904,23 @@
         transform: translateY(0);
     }
 
-    .search-section {
-      padding: 20px 25px;
-      border-bottom: 1px solid #f0f0f0;
-      background: #fff;
-      position: sticky;
-      top: 0;
-      z-index: 10;
-    }
-
-    .search-container {
-      position: relative;
-    }
-
-    .search-input {
-      width: 100%;
-      padding: 12px 15px 12px 45px;
-      border: 2px solid #f0f0f0;
-      border-radius: 12px;
-      font-size: 16px;
-      background: #f8f9fa;
-      transition: all 0.2s ease;
-      font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
-    }
-
-    .search-input:focus {
-      outline: none;
-      border-color: #4A90E2;
-      background: #fff;
-    }
-
-    .search-input::placeholder {
-      color: #999;
-    }
-
-    .search-icon {
-      position: absolute;
-      left: 15px;
-      top: 50%;
-      transform: translateY(-50%);
-      color: #666;
-      font-size: 18px;
-    }
-
-    .client-list {
-      padding: 0;
-      max-height: 300px;
-      overflow-y: auto;
-    }
-
-    .client-item {
-      display: flex;
-      align-items: center;
-      padding: 16px 25px;
-      border-bottom: 1px solid #f0f0f0;
-      cursor: pointer;
-      transition: background-color 0.2s ease;
-      background: #fff;
-    }
-
-    .client-item:hover {
-      background: #f8f9fa;
-    }
-
-    .client-item:last-child {
-      border-bottom: none;
-    }
-
-    .client-avatar {
-      width: 40px;
-      height: 40px;
-      border-radius: 50%;
-      background: linear-gradient(135deg, #4A90E2, #357abd);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      color: white;
-      font-weight: 600;
-      font-size: 16px;
-      margin-right: 15px;
-      flex-shrink: 0;
-    }
-
-    .client-info {
-      flex-grow: 1;
-      min-width: 0;
-    }
-
-    .client-name {
-      font-size: 16px;
-      font-weight: 500;
-      color: #333;
-      font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
-    }
-
-    .add-customer-section {
-      padding: 20px 25px;
-      background: #fff;
-      border-top: 1px solid #f0f0f0;
-    }
-
-    .add-customer-btn {
-      width: 100%;
-      background: linear-gradient(135deg, #5DADE2, #3498DB);
-      color: #fff;
-      border: none;
-      padding: 16px 20px;
-      font-size: 16px;
-      font-weight: 600;
-      border-radius: 12px;
-      cursor: pointer;
-      transition: all 0.2s ease;
-      font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
-    }
-
-    .add-customer-btn:hover {
-      transform: translateY(-2px);
-      box-shadow: 0 6px 20px rgba(93, 173, 226, 0.3);
-    }
-
-    .add-customer-btn:active {
-      transform: translateY(0);
-    }
-
-    #addCustomerModal .modal-body {
-      padding: 25px;
-      max-height: calc(80vh - 80px);
-      overflow-y: auto;
-    }
-
-    #addCustomerModal .form-group {
-      margin-bottom: 20px;
-    }
-
-    #addCustomerModal .form-group:last-of-type {
-      margin-bottom: 25px;
-    }
-
-    #addCustomerModal .form-label {
-      display: block;
-      font-size: 16px;
-      font-weight: 500;
-      color: #333;
-      margin-bottom: 8px;
-      font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
-    }
-
-    #addCustomerModal .form-control {
-      width: 100%;
-      padding: 15px;
-      border: none;
-      border-radius: 12px;
-      font-size: 16px;
-      background: #f5f5f5;
-      transition: all 0.2s ease;
-      box-sizing: border-box;
-      font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
-      color: #333;
-    }
-
-    #addCustomerModal .form-control::placeholder {
-      color: #999;
-      font-size: 15px;
-    }
-
-    #addCustomerModal .form-control:focus {
-      outline: none;
-      background: #fff;
-      box-shadow: 0 0 0 2px rgba(74, 144, 226, 0.2);
-    }
-
-    #addCustomerModal .address-textarea {
-      resize: vertical;
-      min-height: 100px;
-      font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
-    }
-
-    .save-customer-btn {
-      width: 100%;
-      background: linear-gradient(135deg, #5DADE2, #3498DB);
-      color: #fff;
-      border: none;
-      padding: 16px 20px;
-      font-size: 16px;
-      font-weight: 600;
-      border-radius: 12px;
-      cursor: pointer;
-      transition: all 0.2s ease;
-      font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
-      margin-top: 10px;
-    }
-
-    .save-customer-btn:hover {
-      transform: translateY(-2px);
-      box-shadow: 0 6px 20px rgba(93, 173, 226, 0.3);
-    }
-
-    .save-customer-btn:active {
-      transform: translateY(0);
-    }
-
-    .save-customer-btn:disabled {
-      background: #ccc;
-      cursor: not-allowed;
-      transform: none;
-      box-shadow: none;
-    }
-
+    /* Responsive adjustments for mobile */
     @media (max-width: 480px) {
+      .delete-background {
+        width: 100px;
+        font-size: 20px;
+      }
+      
+      .delete-background::after {
+        font-size: 10px;
+        margin-left: 6px;
+      }
+      
+      .swipe-hint {
+        right: 120px;
+        font-size: 11px;
+      }
+
       .cart-section {
         margin: 10px;
       }
@@ -1202,7 +989,6 @@
 @section('js')
 <script>
 document.addEventListener('DOMContentLoaded', function() {
-    // ============= LOAD SELECTED MERCHANT =============
     loadSelectedMerchant();
     
     let dealerCartData = [];
@@ -1237,7 +1023,6 @@ document.addEventListener('DOMContentLoaded', function() {
     const MAX_SWIPE_DISTANCE = 120;
     const MIN_MOVEMENT_THRESHOLD = 15;
 
-    // ============= MERCHANT SELECTION FUNCTIONS =============
     function loadSelectedMerchant() {
         try {
             const selectedMerchantData = localStorage.getItem('selectedMerchant');
@@ -1700,6 +1485,10 @@ document.addEventListener('DOMContentLoaded', function() {
         if (typeof triggerCartBadgeUpdate === 'function') {
             triggerCartBadgeUpdate();
         }
+
+        if (typeof updateFloatingCartButton === 'function') {
+            updateFloatingCartButton();
+        }
     }
 
     function updateOrderSummary() {
@@ -1716,286 +1505,286 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     const placeOrderBtn = document.getElementById('place-order-btn');
-    if (placeOrderBtn) {
-        placeOrderBtn.addEventListener('click', function() {
-            if (dealerCartData.length === 0) {
-                alert('Your cart is empty. Please add some items first.');
-                return;
-            }
+        if (placeOrderBtn) {
+            placeOrderBtn.addEventListener('click', function() {
+                if (dealerCartData.length === 0) {
+                    alert('Your cart is empty. Please add some items first.');
+                    return;
+                }
 
-            const merchantId = localStorage.getItem('currentMerchantId');
-            const merchantName = localStorage.getItem('currentMerchantName');
-            
-            if (!merchantId || !merchantName) {
-                alert('Please select a merchant before placing an order.');
-                localStorage.setItem('returnToCart', 'true');
-                window.location.href = "{{ route('merchants') }}";
-                return;
-            }
+                const merchantId = localStorage.getItem('currentMerchantId');
+                const merchantName = localStorage.getItem('currentMerchantName');
+                
+                if (!merchantId || !merchantName) {
+                    alert('Please select a merchant before placing an order.');
+                    localStorage.setItem('returnToCart', 'true');
+                    window.location.href = "{{ route('merchants') }}";
+                    return;
+                }
 
-            const paymentMethodElement = document.querySelector('input[name="payment_method"]:checked');
-            const paymentMethod = paymentMethodElement ? paymentMethodElement.value : 'cod';
-            
-            console.log('Selected payment method:', paymentMethod);
-            console.log('Payment method element:', paymentMethodElement);
-            
-            const orderData = {
-                merchant_id: merchantId,
-                merchant_name: merchantName,
-                merchant_category: localStorage.getItem('currentMerchantCategory'),
-                items: dealerCartData,
-                payment_method: paymentMethod,
-                subtotal: dealerCartData.reduce((sum, item) => sum + (item.price * item.quantity), 0),
-                total: dealerCartData.reduce((sum, item) => sum + (item.price * item.quantity), 0),
-                order_notes: document.getElementById('order-notes') ? document.getElementById('order-notes').value : ''
-            };
+                const paymentMethodElement = document.querySelector('input[name="payment_method"]:checked');
+                const paymentMethod = paymentMethodElement ? paymentMethodElement.value : 'cod';
+                
+                console.log('Selected payment method:', paymentMethod);
+                console.log('Payment method element:', paymentMethodElement);
+                
+                const orderData = {
+                    merchant_id: merchantId,
+                    merchant_name: merchantName,
+                    merchant_category: localStorage.getItem('currentMerchantCategory'),
+                    items: dealerCartData,
+                    payment_method: paymentMethod,
+                    subtotal: dealerCartData.reduce((sum, item) => sum + (item.price * item.quantity), 0),
+                    total: dealerCartData.reduce((sum, item) => sum + (item.price * item.quantity), 0),
+                    order_notes: document.getElementById('order-notes') ? document.getElementById('order-notes').value : ''
+                };
 
-            localStorage.setItem('dealerOrderData', JSON.stringify(orderData));
+                localStorage.setItem('dealerOrderData', JSON.stringify(orderData));
 
-            this.disabled = true;
-            this.innerHTML = 'Processing... <i class="bi bi-hourglass-split"></i>';
+                this.disabled = true;
+                this.innerHTML = 'Processing... <i class="bi bi-hourglass-split"></i>';
 
-            setTimeout(() => {
-                window.location.href = "{{ route('order-payment') }}";
-            }, 1000);
+                setTimeout(() => {
+                    window.location.href = "{{ route('order-payment') }}";
+                }, 1000);
 
-            console.log('Dealer Order Data:', orderData);
-        });
-    }
+                console.log('Dealer Order Data:', orderData);
+            });
+        }
 
-    renderCartItems();
-    updateOrderSummary();
-});
+        renderCartItems();
+        updateOrderSummary();
+    });
 </script>
 
 <script>
-function openDeliveryOptions() {
-    const modal = document.getElementById('clientModal');
-    modal.classList.add('active');
-    document.body.style.overflow = 'hidden';
-    
-    const currentMethod = localStorage.getItem('deliveryMethod') || 'pickup';
-    const currentDate = localStorage.getItem('deliveryDate') || '21-june-2020';
-    
-    const radioButton = document.querySelector(`input[name="delivery_method"][value="${currentMethod}"]`);
-    if (radioButton) {
-        radioButton.checked = true;
-        
-        document.querySelectorAll('.delivery-option').forEach(option => {
-            option.classList.remove('selected');
-        });
-        radioButton.closest('.delivery-option').classList.add('selected');
+  function openDeliveryOptions() {
+      const modal = document.getElementById('clientModal');
+      modal.classList.add('active');
+      document.body.style.overflow = 'hidden';
+      
+      const currentMethod = localStorage.getItem('deliveryMethod') || 'pickup';
+      const currentDate = localStorage.getItem('deliveryDate') || '21-june-2020';
+      
+      const radioButton = document.querySelector(`input[name="delivery_method"][value="${currentMethod}"]`);
+      if (radioButton) {
+          radioButton.checked = true;
+          
+          document.querySelectorAll('.delivery-option').forEach(option => {
+              option.classList.remove('selected');
+          });
+          radioButton.closest('.delivery-option').classList.add('selected');
+      }
+      
+      const dateSelector = document.getElementById('pickupDate');
+      if (dateSelector) {
+          dateSelector.value = currentDate;
+      }
+      
+      if (typeof resetAllSwipes === 'function') {
+          resetAllSwipes();
+      }
+  }
+
+  function closeClientModal() {
+      const modal = document.getElementById('clientModal');
+      modal.classList.remove('active');
+      document.body.style.overflow = '';
+  }
+
+  function selectDeliveryOption(element, type) {
+      document.querySelectorAll('.delivery-option').forEach(option => {
+          option.classList.remove('selected');
+      });
+      
+      element.classList.add('selected');
+      
+      const radio = element.querySelector('input[type="radio"]');
+      radio.checked = true;
+      
+      updateAssignedAdsDisplay(type);
+  }
+
+  function updateAssignedAdsDisplay(deliveryType) {
+      const adsIcon = document.querySelector('.ads-icon img');
+      const adsName = document.getElementById('assigned-ads-name');
+      const adsLabel = document.querySelector('.ads-label');
+      
+      if (deliveryType === 'pickup') {
+          if (adsIcon) {
+              adsIcon.src = "{{ asset('images/walk.png') }}";
+              adsIcon.alt = "Pickup";
+              adsIcon.style.width = "80px";
+              adsIcon.style.height = "80px";
+          }
+          if (adsName) {
+              adsName.textContent = "Customer";
+          }
+          if (adsLabel) {
+              adsLabel.textContent = "PICKUP";
+          }
+          
+          console.log('Changed to pickup mode');
+      } else if (deliveryType === 'delivery') {
+          if (adsIcon) {
+              adsIcon.src = "{{ asset('images/riders.png') }}";
+              adsIcon.alt = "Rider";
+              adsIcon.style.width = "100px";
+              adsIcon.style.height = "100px";
+          }
+          if (adsName) {
+              adsName.textContent = "YULIVER BALBANERO";
+          }
+          if (adsLabel) {
+              adsLabel.textContent = "ASSIGNED ADS";
+          }
+          
+          console.log('Changed to delivery mode');
+      }
+  }
+
+  function updateClientSelection() {
+      const selectedMethod = document.querySelector('input[name="delivery_method"]:checked').value;
+      const selectedDate = document.getElementById('pickupDate').value;
+      
+      console.log('Selected method:', selectedMethod);
+      console.log('Selected date:', selectedDate);
+      
+      updateAssignedAdsDisplay(selectedMethod);
+      
+      localStorage.setItem('deliveryMethod', selectedMethod);
+      localStorage.setItem('deliveryDate', selectedDate);
+      
+      closeClientModal();
+  }
+
+  document.addEventListener('DOMContentLoaded', function() {
+      let savedMethod = localStorage.getItem('dealerDeliveryMethod');
+      if (!savedMethod) {
+          savedMethod = 'delivery';
+          localStorage.setItem('dealerDeliveryMethod', 'delivery');
+      }
+
+      updateAssignedAdsDisplay(savedMethod);
+
+      const clientModal = document.getElementById('clientModal');
+      if (clientModal) {
+          clientModal.addEventListener('click', function(e) {
+              if (e.target === this) {
+                  closeClientModal();
+              }
+          });
+      }
+      
+      document.addEventListener('keydown', function(e) {
+          if (e.key === 'Escape') {
+              closeClientModal();
+          }
+      });
+  });
+
+  document.addEventListener('DOMContentLoaded', function() {
+      const savedDeliveryMethod = localStorage.getItem('deliveryMethod');
+      
+      if (savedDeliveryMethod) {
+          const savedRadio = document.querySelector(`input[name="delivery_method"][value="${savedDeliveryMethod}"]`);
+          if (savedRadio) {
+              savedRadio.checked = true;
+              
+              document.querySelectorAll('.delivery-option').forEach(option => {
+                  option.classList.remove('selected');
+              });
+              savedRadio.closest('.delivery-option').classList.add('selected');
+          }
+          
+          updateAssignedAdsDisplay(savedDeliveryMethod);
+      } else {
+          updateAssignedAdsDisplay('pickup');
+      }
+      
+      const savedDate = localStorage.getItem('deliveryDate');
+      if (savedDate) {
+          const dateSelector = document.getElementById('pickupDate');
+          if (dateSelector) {
+              dateSelector.value = savedDate;
+          }
+      }
+  });
+</script>
+
+<script>
+  document.addEventListener('DOMContentLoaded', function() {
+    const addCustomerForm = document.getElementById('addCustomerForm');
+    if (addCustomerForm) {
+      addCustomerForm.addEventListener('submit', function(e) {
+        e.preventDefault();
+        const formData = {
+          name: document.getElementById('customerName').value.trim(),
+          number: document.getElementById('customerNumber').value.trim(),
+          email: document.getElementById('customerEmail').value.trim(),
+          address: document.getElementById('customerAddress').value.trim()
+        };
+        if (!formData.name || !formData.number) {
+          alert('Please fill in the required fields (Name and Number)');
+          return;
+        }
+        const submitBtn = this.querySelector('.save-customer-btn');
+        const originalText = submitBtn.textContent;
+        submitBtn.disabled = true;
+        submitBtn.textContent = 'Saving...';
+        setTimeout(() => {
+          console.log('Customer data:', formData);
+          const existingCustomers = JSON.parse(localStorage.getItem('customers') || '[]');
+          const newCustomer = {
+            id: Date.now(),
+            ...formData,
+            createdAt: new Date().toISOString()
+          };
+          existingCustomers.push(newCustomer);
+          localStorage.setItem('customers', JSON.stringify(existingCustomers));
+          alert(`Customer "${formData.name}" has been added successfully!`);
+          closeAddCustomerModal();
+          submitBtn.disabled = false;
+          submitBtn.textContent = originalText;
+        }, 1000);
+      });
     }
     
-    const dateSelector = document.getElementById('pickupDate');
-    if (dateSelector) {
-        dateSelector.value = currentDate;
-    }
-    
-    if (typeof resetAllSwipes === 'function') {
-        resetAllSwipes();
-    }
-}
-
-function closeClientModal() {
-    const modal = document.getElementById('clientModal');
-    modal.classList.remove('active');
-    document.body.style.overflow = '';
-}
-
-function selectDeliveryOption(element, type) {
-    document.querySelectorAll('.delivery-option').forEach(option => {
-        option.classList.remove('selected');
-    });
-    
-    element.classList.add('selected');
-    
-    const radio = element.querySelector('input[type="radio"]');
-    radio.checked = true;
-    
-    updateAssignedAdsDisplay(type);
-}
-
-function updateAssignedAdsDisplay(deliveryType) {
-    const adsIcon = document.querySelector('.ads-icon img');
-    const adsName = document.getElementById('assigned-ads-name');
-    const adsLabel = document.querySelector('.ads-label');
-    
-    if (deliveryType === 'pickup') {
-        if (adsIcon) {
-            adsIcon.src = "{{ asset('images/walk.png') }}";
-            adsIcon.alt = "Pickup";
-            adsIcon.style.width = "80px";
-            adsIcon.style.height = "80px";
+    const addCustomerModal = document.getElementById('addCustomerModal');
+    if (addCustomerModal) {
+      addCustomerModal.addEventListener('click', function(e) {
+        if (e.target === this) {
+          closeAddCustomerModal();
         }
-        if (adsName) {
-            adsName.textContent = "Customer";
-        }
-        if (adsLabel) {
-            adsLabel.textContent = "PICKUP";
-        }
-        
-        console.log('Changed to pickup mode');
-    } else if (deliveryType === 'delivery') {
-        if (adsIcon) {
-            adsIcon.src = "{{ asset('images/riders.png') }}";
-            adsIcon.alt = "Rider";
-            adsIcon.style.width = "100px";
-            adsIcon.style.height = "100px";
-        }
-        if (adsName) {
-            adsName.textContent = "YULIVER BALBANERO";
-        }
-        if (adsLabel) {
-            adsLabel.textContent = "ASSIGNED ADS";
-        }
-        
-        console.log('Changed to delivery mode');
-    }
-}
-
-function updateClientSelection() {
-    const selectedMethod = document.querySelector('input[name="delivery_method"]:checked').value;
-    const selectedDate = document.getElementById('pickupDate').value;
-    
-    console.log('Selected method:', selectedMethod);
-    console.log('Selected date:', selectedDate);
-    
-    updateAssignedAdsDisplay(selectedMethod);
-    
-    localStorage.setItem('deliveryMethod', selectedMethod);
-    localStorage.setItem('deliveryDate', selectedDate);
-    
-    closeClientModal();
-}
-
-document.addEventListener('DOMContentLoaded', function() {
-    let savedMethod = localStorage.getItem('dealerDeliveryMethod');
-    if (!savedMethod) {
-        savedMethod = 'delivery';
-        localStorage.setItem('dealerDeliveryMethod', 'delivery');
-    }
-
-    updateAssignedAdsDisplay(savedMethod);
-
-    const clientModal = document.getElementById('clientModal');
-    if (clientModal) {
-        clientModal.addEventListener('click', function(e) {
-            if (e.target === this) {
-                closeClientModal();
-            }
-        });
+      });
     }
     
     document.addEventListener('keydown', function(e) {
-        if (e.key === 'Escape') {
-            closeClientModal();
-        }
-    });
-});
-
-document.addEventListener('DOMContentLoaded', function() {
-    const savedDeliveryMethod = localStorage.getItem('deliveryMethod');
-    
-    if (savedDeliveryMethod) {
-        const savedRadio = document.querySelector(`input[name="delivery_method"][value="${savedDeliveryMethod}"]`);
-        if (savedRadio) {
-            savedRadio.checked = true;
-            
-            document.querySelectorAll('.delivery-option').forEach(option => {
-                option.classList.remove('selected');
-            });
-            savedRadio.closest('.delivery-option').classList.add('selected');
-        }
-        
-        updateAssignedAdsDisplay(savedDeliveryMethod);
-    } else {
-        updateAssignedAdsDisplay('pickup');
-    }
-    
-    const savedDate = localStorage.getItem('deliveryDate');
-    if (savedDate) {
-        const dateSelector = document.getElementById('pickupDate');
-        if (dateSelector) {
-            dateSelector.value = savedDate;
-        }
-    }
-});
-</script>
-
-<script>
-document.addEventListener('DOMContentLoaded', function() {
-  const addCustomerForm = document.getElementById('addCustomerForm');
-  if (addCustomerForm) {
-    addCustomerForm.addEventListener('submit', function(e) {
-      e.preventDefault();
-      const formData = {
-        name: document.getElementById('customerName').value.trim(),
-        number: document.getElementById('customerNumber').value.trim(),
-        email: document.getElementById('customerEmail').value.trim(),
-        address: document.getElementById('customerAddress').value.trim()
-      };
-      if (!formData.name || !formData.number) {
-        alert('Please fill in the required fields (Name and Number)');
-        return;
-      }
-      const submitBtn = this.querySelector('.save-customer-btn');
-      const originalText = submitBtn.textContent;
-      submitBtn.disabled = true;
-      submitBtn.textContent = 'Saving...';
-      setTimeout(() => {
-        console.log('Customer data:', formData);
-        const existingCustomers = JSON.parse(localStorage.getItem('customers') || '[]');
-        const newCustomer = {
-          id: Date.now(),
-          ...formData,
-          createdAt: new Date().toISOString()
-        };
-        existingCustomers.push(newCustomer);
-        localStorage.setItem('customers', JSON.stringify(existingCustomers));
-        alert(`Customer "${formData.name}" has been added successfully!`);
-        closeAddCustomerModal();
-        submitBtn.disabled = false;
-        submitBtn.textContent = originalText;
-      }, 1000);
-    });
-  }
-  
-  const addCustomerModal = document.getElementById('addCustomerModal');
-  if (addCustomerModal) {
-    addCustomerModal.addEventListener('click', function(e) {
-      if (e.target === this) {
+      if (e.key === 'Escape' && document.getElementById('addCustomerModal') && document.getElementById('addCustomerModal').classList.contains('active')) {
         closeAddCustomerModal();
       }
     });
+  });
+
+  function formatPhoneNumber(input) {
+    let value = input.value.replace(/\D/g, '');
+    if (value.length > 0) {
+      if (value.startsWith('63')) {
+        value = '+' + value.substring(0, 12);
+      } else if (!value.startsWith('63')) {
+        value = '+63' + value.substring(0, 10);
+      }
+    }
+    input.value = value;
   }
-  
-  document.addEventListener('keydown', function(e) {
-    if (e.key === 'Escape' && document.getElementById('addCustomerModal') && document.getElementById('addCustomerModal').classList.contains('active')) {
-      closeAddCustomerModal();
+
+  document.addEventListener('DOMContentLoaded', function() {
+    const numberInput = document.getElementById('customerNumber');
+    if (numberInput) {
+      numberInput.addEventListener('input', function() {
+        formatPhoneNumber(this);
+      });
     }
   });
-});
-
-function formatPhoneNumber(input) {
-  let value = input.value.replace(/\D/g, '');
-  if (value.length > 0) {
-    if (value.startsWith('63')) {
-      value = '+' + value.substring(0, 12);
-    } else if (!value.startsWith('63')) {
-      value = '+63' + value.substring(0, 10);
-    }
-  }
-  input.value = value;
-}
-
-document.addEventListener('DOMContentLoaded', function() {
-  const numberInput = document.getElementById('customerNumber');
-  if (numberInput) {
-    numberInput.addEventListener('input', function() {
-      formatPhoneNumber(this);
-    });
-  }
-});
 </script>
 @endsection

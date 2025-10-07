@@ -1,8 +1,133 @@
 @extends('layouts.header')
-@section('header')
-<link rel="stylesheet" href="{{asset('design/assets/libs/jvectormap/jquery-jvectormap.css')}}">
-<link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.2/css/bootstrap.min.css" rel="stylesheet">
-<link href="https://cdnjs.cloudflare.com/ajax/libs/tabler-icons/2.40.0/tabler-icons.min.css" rel="stylesheet">
+
+@section('content')
+<div class="content-area mt-3">
+    <section class="welcome">
+        <div class="container-fluid" style="max-width: 1400px; margin: 0 auto;">
+        <div class="row g-1">
+            <div class="col-6 col-md-5 col-lg-2 d-flex">
+                <div class="card stats-card w-100 border-0">
+                    <div class="icon-circle">
+                        <i class="fas fa-clock"></i>
+                    </div>
+                    <div class="stats-number">8:00 AM</div>
+                    <div class="stats-label">Time in</div>
+                </div>
+            </div>
+
+            <div class="col-6 col-md-4 col-lg-2 d-flex">
+                <div class="card stats-card w-100 border-0">
+                    <div class="icon-circle">
+                        <i class="fas fa-money-bill-wave"></i>
+                    </div>
+                    <div class="stats-number">₱{{ number_format(125000, 2) }}</div>
+                    <div class="stats-label">Total sales</div>
+                    <div class="trend-indicator text-success">
+                        12.5% <i class="fas fa-arrow-trend-up"></i>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-6 col-md-4 col-lg-2 d-flex">
+                <div class="card stats-card w-100 border-0">
+                    <div class="icon-circle">
+                        <i class="fas fa-shopping-cart"></i>
+                    </div>
+                    <div class="stats-number">{{ number_format(2450, 0) }}</div>
+                    <div class="stats-label">Transactions</div>
+                    <div class="trend-indicator text-success">
+                        8.2% <i class="fas fa-arrow-trend-up"></i>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-6 col-md-4 col-lg-2 d-flex">
+                <div class="card stats-card w-100 border-0">
+                    <div class="icon-circle">
+                        <i class="fas fa-wallet"></i>
+                    </div>
+                    <div class="stats-number">₱{{ number_format(15000, 2) }}</div>
+                    <div class="stats-label">Cash on hand</div>
+                </div>
+            </div>
+
+            <div class="col-6 col-md-4 col-lg-2 d-flex">
+                <div class="card stats-card w-100 border-0">
+                    <div class="icon-circle">
+                        <i class="fas fa-arrow-up"></i>
+                    </div>
+                    <div class="stats-number">₱{{ number_format(8500, 2) }}</div>
+                    <div class="stats-label">Remit</div>
+                </div>
+            </div>
+
+            <div class="col-6 col-md-4 col-lg-2 d-flex">
+                <div class="card stats-card w-100 border-0">
+                    <div class="icon-circle">
+                        <i class="fas fa-coins"></i>
+                    </div>
+                    <div class="stats-number">₱{{ number_format(2500, 2) }}</div>
+                    <div class="stats-label">Petty cash</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="best-seller mt-2">
+        <div class="card border-0">
+            <div class="card-body">
+                <div class="d-flex justify-content-between align-items-center mb-4">
+                    <h6 class="fw-bold mb-0">Most Type of Order</h6>
+                    <select class="form-select form-select-sm w-auto">
+                        <option selected>Today</option>
+                        <option>This Week</option>
+                        <option>This Month</option>
+                    </select>
+                </div>
+
+                <div class="mb-3">
+                    <div class="d-flex justify-content-between mb-1">
+                        <span class="fw-semibold">Gaz Lite Stove</span>
+                        <span class="text-muted small">200 customers</span>
+                    </div>
+                    <div class="progress" style="height: 10px;">
+                        <div class="progress-bar progress-bar-red" style="width: 80%;"></div>
+                    </div>
+                </div>
+
+                <div class="mb-3">
+                    <div class="d-flex justify-content-between mb-1">
+                        <span class="fw-semibold">Grill</span>
+                        <span class="text-muted small">90 customers</span>
+                    </div>
+                    <div class="progress" style="height: 10px;">
+                        <div class="progress-bar progress-bar-blue" style="width: 45%;"></div>
+                    </div>
+                </div>
+
+                <div class="mb-3">
+                    <div class="d-flex justify-content-between mb-1">
+                        <span class="fw-semibold">Torch</span>
+                        <span class="text-muted small">160 customers</span>
+                    </div>
+                    <div class="progress" style="height: 10px;">
+                        <div class="progress-bar progress-bar-red" style="width: 65%;"></div>
+                    </div>
+                </div>
+
+                <div>
+                    <div class="d-flex justify-content-between mb-1">
+                        <span class="fw-semibold">Other</span>
+                        <span class="text-muted small">40 customers</span>
+                    </div>
+                    <div class="progress" style="height: 10px;">
+                        <div class="progress-bar progress-bar-blue" style="width: 20%;"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+</div>
 @endsection
 
 <style>
@@ -119,8 +244,6 @@
     margin: 0 auto;
 }
 
-}
-
 .best-seller .card:hover {
     transform: translateY(-3px);
     box-shadow: 0 12px 30px rgba(0, 0, 0, 0.12);
@@ -225,142 +348,3 @@
 </style>
 
 
-@section('content')
-<!-- Wrap the entire content in content-area class for proper bottom padding -->
-<div class="content-area mt-3">
-    <section class="welcome">
-        <div class="container-fluid" style="max-width: 1400px; margin: 0 auto;">
-        <div class="row g-1">
-            <div class="col-6 col-md-5 col-lg-2 d-flex">
-                <div class="card stats-card w-100 border-0">
-                    <div class="icon-circle">
-                        <i class="fas fa-clock"></i>
-                    </div>
-                    <div class="stats-number">8:00 AM</div>
-                    <div class="stats-label">Time in</div>
-                </div>
-            </div>
-
-            <!-- Card 2: Total Sales -->
-            <div class="col-6 col-md-4 col-lg-2 d-flex">
-                <div class="card stats-card w-100 border-0">
-                    <div class="icon-circle">
-                        <i class="fas fa-money-bill-wave"></i>
-                    </div>
-                    <div class="stats-number">₱{{ number_format(125000, 2) }}</div>
-                    <div class="stats-label">Total sales</div>
-                    <div class="trend-indicator text-success">
-                        12.5% <i class="fas fa-arrow-trend-up"></i>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Card 3: Transactions -->
-            <div class="col-6 col-md-4 col-lg-2 d-flex">
-                <div class="card stats-card w-100 border-0">
-                    <div class="icon-circle">
-                        <i class="fas fa-shopping-cart"></i>
-                    </div>
-                    <div class="stats-number">{{ number_format(2450, 0) }}</div>
-                    <div class="stats-label">Transactions</div>
-                    <div class="trend-indicator text-success">
-                        8.2% <i class="fas fa-arrow-trend-up"></i>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Card 4: Cash on Hand -->
-            <div class="col-6 col-md-4 col-lg-2 d-flex">
-                <div class="card stats-card w-100 border-0">
-                    <div class="icon-circle">
-                        <i class="fas fa-wallet"></i>
-                    </div>
-                    <div class="stats-number">₱{{ number_format(15000, 2) }}</div>
-                    <div class="stats-label">Cash on hand</div>
-                </div>
-            </div>
-
-            <!-- Card 5: Remit -->
-            <div class="col-6 col-md-4 col-lg-2 d-flex">
-                <div class="card stats-card w-100 border-0">
-                    <div class="icon-circle">
-                        <i class="fas fa-arrow-up"></i>
-                    </div>
-                    <div class="stats-number">₱{{ number_format(8500, 2) }}</div>
-                    <div class="stats-label">Remit</div>
-                </div>
-            </div>
-
-            <!-- Card 6: Petty Cash -->
-            <div class="col-6 col-md-4 col-lg-2 d-flex">
-                <div class="card stats-card w-100 border-0">
-                    <div class="icon-circle">
-                        <i class="fas fa-coins"></i>
-                    </div>
-                    <div class="stats-number">₱{{ number_format(2500, 2) }}</div>
-                    <div class="stats-label">Petty cash</div>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <section class="best-seller mt-2">
-        <div class="card border-0">
-            <div class="card-body">
-                <div class="d-flex justify-content-between align-items-center mb-4">
-                    <h6 class="fw-bold mb-0">Most Type of Order</h6>
-                    <select class="form-select form-select-sm w-auto">
-                        <option selected>Today</option>
-                        <option>This Week</option>
-                        <option>This Month</option>
-                    </select>
-                </div>
-
-                <!-- Item 1 -->
-                <div class="mb-3">
-                    <div class="d-flex justify-content-between mb-1">
-                        <span class="fw-semibold">Gaz Lite Stove</span>
-                        <span class="text-muted small">200 customers</span>
-                    </div>
-                    <div class="progress" style="height: 10px;">
-                        <div class="progress-bar progress-bar-red" style="width: 80%;"></div>
-                    </div>
-                </div>
-
-                <!-- Item 2 -->
-                <div class="mb-3">
-                    <div class="d-flex justify-content-between mb-1">
-                        <span class="fw-semibold">Grill</span>
-                        <span class="text-muted small">90 customers</span>
-                    </div>
-                    <div class="progress" style="height: 10px;">
-                        <div class="progress-bar progress-bar-blue" style="width: 45%;"></div>
-                    </div>
-                </div>
-
-                <!-- Item 3 -->
-                <div class="mb-3">
-                    <div class="d-flex justify-content-between mb-1">
-                        <span class="fw-semibold">Torch</span>
-                        <span class="text-muted small">160 customers</span>
-                    </div>
-                    <div class="progress" style="height: 10px;">
-                        <div class="progress-bar progress-bar-red" style="width: 65%;"></div>
-                    </div>
-                </div>
-
-                <!-- Item 4 -->
-                <div>
-                    <div class="d-flex justify-content-between mb-1">
-                        <span class="fw-semibold">Other</span>
-                        <span class="text-muted small">40 customers</span>
-                    </div>
-                    <div class="progress" style="height: 10px;">
-                        <div class="progress-bar progress-bar-blue" style="width: 20%;"></div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>
-</div>
-@endsection

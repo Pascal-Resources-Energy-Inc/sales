@@ -25,7 +25,7 @@
       <div class="menu-section">
         <h2 class="section-title">Set Product</h2>
         
-        <a href="/products" class="menu-item">
+        <a href="{{url('/products')}}" class="menu-item">
           <span class="menu-label">Product</span>
           <div class="menu-right">
             <span class="menu-count">12 Items</span>

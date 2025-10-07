@@ -25,7 +25,7 @@
 
   <div class="content-area-fix">
     <div class="page-header">
-      <button class="back-btn" onclick="history.back()">
+      <button class="back-btn" onclick="window.location.href='{{ route('place-order') }}'">
         <i class="bi bi-arrow-left"></i>
       </button>
       <h1 class="page-title">Merchants</h1>
@@ -847,10 +847,17 @@ function initializeCategoryDropdown() {
 // ============= TOGGLE FUNCTIONALITY =============
 function initializeToggle() {
   const toggleSwitch = document.getElementById('toggleSwitch');
-  
+
   if (!toggleSwitch) {
     console.error('Toggle switch not found');
     return;
+  }
+
+  // Load saved state from localStorage
+  const savedRestock = localStorage.getItem('restockMode');
+  restockMode = savedRestock === 'true';
+  if (restockMode) {
+    toggleSwitch.classList.add('active');
   }
 
   toggleSwitch.addEventListener('click', function(e) {
@@ -858,13 +865,14 @@ function initializeToggle() {
     e.stopPropagation();
     
     restockMode = !restockMode;
-    
+    localStorage.setItem('restockMode', restockMode); // save state
+
     if (restockMode) {
       toggleSwitch.classList.add('active');
     } else {
       toggleSwitch.classList.remove('active');
     }
-    
+
     console.log('Restock mode:', restockMode ? 'ON' : 'OFF');
   });
 }
@@ -932,11 +940,11 @@ function selectMerchant(merchantId, merchantName, merchantCategory) {
   };
   
   localStorage.setItem('selectedMerchant', JSON.stringify(merchantData));
-  
+
   console.log('Selected merchant:', merchantData);
   
   showMerchantSelectedNotification(merchantName);
-  
+
   setTimeout(() => {
     const returnToCart = localStorage.getItem('returnToCart');
     if (returnToCart === 'true') {

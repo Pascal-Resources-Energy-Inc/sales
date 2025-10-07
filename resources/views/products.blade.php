@@ -4,7 +4,6 @@
 
 <div class="search-overlay" id="searchOverlay"></div>
 
-<!-- Search Container -->
 <div class="search-container" id="searchContainer">
   <form class="search-form" id="searchForm">
     <div class="search-input-wrapper">
@@ -24,7 +23,6 @@
   </form>
 </div>
 
-<!-- Using Bootstrap classes for top controls -->
 <div class="top-controls mt-1 d-flex justify-content-between align-items-center p-3">
   <div class="dropdown">
     <button class="category-dropdown" type="button" id="categoryDropdown">
@@ -37,7 +35,6 @@
       <li><a class="dropdown-item category-filter" href="#" data-category="cylinder">Gas Cylinders</a></li>
     </ul>
   </div>
-  <!-- Using Bootstrap flex utilities -->
   <div class="d-flex gap-3">
     <i class="bi bi-search text-secondary fs-5 cursor-pointer"></i>
     <i class="fas fa-barcode text-secondary fs-5 cursor-pointer mt-1"></i>
@@ -45,15 +42,14 @@
   </div>
 </div>
 
-<!-- Using Bootstrap container and row -->
 <div class="content-area container-fluid" id="contentWrapper">
   <div class="row g-2">
     @forelse($products as $index => $product)
-      <!-- Using Bootstrap responsive columns -->
+      
       <div class="col-6">
         <div class="product-card-container bg-white rounded-3 shadow-sm border" id="container-{{ $product->id }}">
           <div class="product-card p-3 text-center h-100">
-            <!-- Bootstrap flex utilities for image container -->
+            
             <div class="product-image-container d-flex justify-content-center align-items-center mb-3 rounded-2">
               @if($product->product_image)
                 <img src="{{ asset('uploads/products/' . $product->product_image) }}" alt="{{ $product->product_name }}" class="img-fluid">
@@ -62,11 +58,9 @@
               @endif
             </div>
             
-            <!-- Bootstrap flex utilities for product info -->
             <div class="product-info d-flex flex-column h-100">
               <div class="product-name mb-2">{{ $product->product_name }}</div>
               
-              <!-- Bootstrap flex utilities for price and add button -->
               <div class="price-add-container d-flex justify-content-between align-items-center mt-auto">
                 <div class="product-price fw-bold text-primary flex-grow-1 text-start">₱ {{ number_format($product->price, 2) }}</div>
                 <div class="add-to-cart">
@@ -93,7 +87,7 @@
         </div>
       </div>
     @empty
-      <!-- Bootstrap utilities for empty state -->
+
       <div class="col-12">
         <div class="text-center py-5 text-muted">
           <i class="bi bi-box display-1 mb-3 d-block text-light"></i>
@@ -105,7 +99,6 @@
   </div>
 </div>
 
-<!-- Fixed Cart Summary -->
 <div class="cart-summary-wrapper">
   <button class="cart-summary-btn" id="checkoutBar">
     <span id="total-items"><i class="bi bi-cart-fill"></i> 0 Items</span>
@@ -118,7 +111,6 @@
 @section('css')
 
 <style>
-  /* Keep essential header and layout styles */
   .page-title {
     font-size: 20px;
     font-weight: 600;
@@ -271,7 +263,6 @@
 
   .view-controls i.active { color: #4A90E2; }
 
-  /* Product cards - Simplified with Bootstrap */
   .product-card-container {
     transition: all 0.3s ease;
   }
@@ -386,7 +377,6 @@
   .add-to-cart button:active { transform: scale(0.95); }
   .add-to-cart button i { font-size: 14px; }
 
-  /* Color selection modal - Keep existing complex styles */
   .color-selection-expansion {
     position: fixed;
     top: 50%;
@@ -566,6 +556,18 @@
     left: 15px;
     right: 15px;
     z-index: 1000;
+    opacity: 0;
+    visibility: hidden;
+    transform: translateY(20px);
+    pointer-events: none;
+    transition: opacity 0.3s ease, visibility 0.3s ease, transform 0.3s ease;
+  }
+
+  .cart-summary-wrapper.show {
+    opacity: 1;
+    visibility: visible;
+    transform: translateY(0);
+    pointer-events: auto;
   }
 
   .cart-summary-btn {
@@ -596,7 +598,6 @@
     margin-right: 6px;
   }
 
-  /* Search functionality - Keep existing complex styles */
   .search-container {
     position: fixed;
     top: 0;
@@ -847,7 +848,6 @@
   color: #4A90E2;
 }
 
-/* Quantity selection section */
 .quantity-selection {
   margin-bottom: 20px;
 }
@@ -945,7 +945,6 @@
   -moz-appearance: textfield;
 }
 
-/* Modal actions */
 .modal-actions {
   display: flex;
   gap: 12px;
@@ -1043,7 +1042,6 @@
   }
 }
 
-/* Responsive adjustments for quantity modal */
 @media (max-width: 375px) {
   .quantity-modal {
     width: 95%;
@@ -1089,7 +1087,6 @@
   }
 }
 
-/* Loading state for buttons */
 .add-btn.loading {
   pointer-events: none;
   opacity: 0.7;
@@ -1114,14 +1111,12 @@
   100% { transform: translate(-50%, -50%) rotate(360deg); }
 }
 
-/* Enhanced focus styles for accessibility */
 .quantity-btn:focus,
 .modal-action-btn:focus {
   outline: none;
   box-shadow: 0 0 0 3px rgba(74, 144, 226, 0.3);
 }
 
-/* Toast notification styles (optional enhancement) */
 .quantity-toast {
   position: fixed;
   bottom: 120px;
@@ -1145,8 +1140,8 @@
 </style>
 @endsection
 
+<!-- products blade -->
 @section('js')
-
 <script>
 document.addEventListener('DOMContentLoaded', function() {
   const categoryDropdown = document.getElementById('categoryDropdown');
@@ -1534,32 +1529,26 @@ document.addEventListener('DOMContentLoaded', function() {
     });
   });
 
-  // Load cart data from localStorage
   function loadSavedCart() {
-    try {
-      // Check for saved cart data
-      const savedProducts = localStorage.getItem('dealerCartData');
-      const savedItems = localStorage.getItem('dealerCartItems');
-      const savedTotal = localStorage.getItem('dealerCartTotal');
-      
-      if (savedProducts) {
-        cart.products = JSON.parse(savedProducts);
-        cart.items = parseInt(savedItems) || 0;
-        cart.amount = parseFloat(savedTotal) || 0;
-        
-        console.log('Found saved cart:', cart);
-        
-        // Update button displays based on saved data
-        updateButtonsFromSavedData();
-        
-        // Update the cart summary
-        updateCartDisplay();
+      try {
+          const savedProducts = localStorage.getItem('dealerCartData');
+          const savedItems = localStorage.getItem('dealerCartItems');
+          const savedTotal = localStorage.getItem('dealerCartTotal');
+          
+          if (savedProducts) {
+              cart.products = JSON.parse(savedProducts);
+              cart.items = parseInt(savedItems) || 0;
+              cart.amount = parseFloat(savedTotal) || 0;
+              
+              console.log('Found saved cart:', cart);
+              updateButtonsFromSavedData();
+              updateCartDisplay();
+              updateCartSummaryButton();
+          }
+      } catch (error) {
+          console.error('Error loading saved cart:', error);
+          cart = { items: 0, amount: 0, products: [] };
       }
-    } catch (error) {
-      console.error('Error loading saved cart:', error);
-      // If there's an error, just start fresh
-      cart = { items: 0, amount: 0, products: [] };
-    }
   }
 
   // Update buttons to show quantities from saved cart
@@ -1636,9 +1625,12 @@ document.addEventListener('DOMContentLoaded', function() {
           
           <div class="quantity-input-section">
             <label class="quantity-label">Quantity:</label>
+            <div class="current_cart_qty" style="font-size: 12px; color: #666; margin-bottom: 10px;">
+                Currently in cart: ${currentQuantity}
+            </div>
             <div class="quantity-controls">
               <button type="button" class="quantity-btn minus-btn" data-action="decrease">-</button>
-              <input type="number" class="quantity-input" value="${currentQuantity}" min="0" max="999">
+              <input type="number" class="quantity-input" placeholder="0" min="0" max="999">
               <button type="button" class="quantity-btn plus-btn" data-action="increase">+</button>
             </div>
           </div>
@@ -1709,17 +1701,18 @@ document.addEventListener('DOMContentLoaded', function() {
 
     // Confirm button
     confirmBtn.addEventListener('click', () => {
-      const quantity = parseInt(quantityInput.value) || 0;
+      const addedQuantity = parseInt(quantityInput.value) || 0;
       const productData = buttonToProduct.get(button);
-      
       if (!productData) return;
 
       const oldQuantity = buttonQuantities.get(button) || 0;
-      buttonQuantities.set(button, quantity);
-      
-      // Update the cart
-      updateRegularProductCart(productData, button, oldQuantity, quantity);
-      updateButtonDisplay(button, quantity);
+      const newQuantity = oldQuantity + addedQuantity;
+
+      buttonQuantities.set(button, newQuantity);
+
+      updateRegularProductCart(productData, button, oldQuantity, newQuantity);
+      updateButtonDisplay(button, newQuantity);
+
       
       closeExpansion();
     });
@@ -1991,6 +1984,7 @@ document.addEventListener('DOMContentLoaded', function() {
   function updateCartDisplay() {
     totalItems.innerHTML = `<i class="bi bi-cart-fill"></i> ${cart.items} Items`;
     totalAmount.innerText = `Total: ₱ ${cart.amount.toFixed(2)}`;
+    updateCartSummaryButton();
   }
 
   // Save cart to localStorage
@@ -2000,11 +1994,11 @@ document.addEventListener('DOMContentLoaded', function() {
       localStorage.setItem('dealerCartTotal', cart.amount.toFixed(2));
       localStorage.setItem('dealerCartItems', cart.items.toString());
       
-      // Keep old keys for compatibility
       localStorage.setItem('cartData', JSON.stringify(cart.products));
       localStorage.setItem('cartTotal', cart.amount.toFixed(2));
       localStorage.setItem('cartItems', cart.items.toString());
-      
+
+      updateCartSummaryButton();
       console.log('Cart saved to localStorage');
     } catch (error) {
       console.error('Error saving cart:', error);
@@ -2077,6 +2071,56 @@ document.addEventListener('DOMContentLoaded', function() {
       window.location.href = "{{ route('place-order') }}";
     });
   }
+});
+
+function updateCartSummaryButton() {
+    try {
+        const totalItemsElement = document.getElementById('total-items');
+        const totalAmountElement = document.getElementById('total-amount');
+        const cartSummaryWrapper = document.querySelector('.cart-summary-wrapper');
+        
+        if (!totalItemsElement || !totalAmountElement) return;
+
+        let totalItems = 0;
+        let totalAmount = 0;
+
+        const cartData = localStorage.getItem('dealerCartData');
+        if (cartData) {
+            const parsedData = JSON.parse(cartData);
+            if (Array.isArray(parsedData)) {
+                totalItems = parsedData.reduce((sum, item) => sum + (parseInt(item.quantity) || 0), 0);
+                
+                totalAmount = parsedData.reduce((sum, item) => {
+                    const price = parseFloat(item.price) || 0;
+                    const quantity = parseInt(item.quantity) || 0;
+                    return sum + (price * quantity);
+                }, 0);
+            }
+        }
+
+        totalItemsElement.innerHTML = `<i class="bi bi-cart-fill"></i> ${totalItems} Items`;
+        totalAmountElement.textContent = `Total: ₱ ${totalAmount.toFixed(2)}`;
+
+        // Show/hide cart summary based on items
+        if (cartSummaryWrapper) {
+            if (totalItems > 0) {
+                cartSummaryWrapper.classList.add('show');
+            } else {
+                cartSummaryWrapper.classList.remove('show');
+            }
+        }
+
+        console.log('Cart summary updated:', { totalItems, totalAmount });
+    } catch (error) {
+        console.error('Error updating cart summary:', error);
+    }
+}
+
+// Listen for storage changes
+window.addEventListener('storage', function(e) {
+    if (e.key === 'dealerCartData' || e.key === 'dealerCartItems') {
+        updateCartSummaryButton();
+    }
 });
 </script>
 

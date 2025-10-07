@@ -3,40 +3,160 @@
 @section('content')
 <div class="transaction-history-page">
   <div class="content-area-fix">
+    <!-- Page Header -->
     <div class="page-header-nya">
-      <button class="back-btn" onclick="history.back()">
+      <button class="back-btn btn btn-link p-0" onclick="history.back()">
         <i class="bi bi-arrow-left"></i>
       </button>
-      <h1 class="page-title">Transaction History</h1>
+      <h1 class="page-title mb-0">Transaction History</h1>
     </div>
 
-    <div class="pull-refresh" id="pull-refresh">
-      <i class="bi bi-arrow-clockwise"></i> Pull to refresh
-    </div>
-
+    <!-- Filter Section -->
     <div class="filter-section">
-      <button class="filter-btn" onclick="toggleDateFilter()">
-        <div class="filter-icon">
-          <i class="bi bi-sliders"></i>
+      <button class="filter-btn btn w-100 d-flex align-items-center justify-content-between" onclick="openFilterModal()">
+        <div class="filter-icon d-flex align-items-center">
+          <i class="bi bi-sliders me-2"></i>
           <span>Filter Date & Time</span>
         </div>
         <i class="bi bi-chevron-right"></i>
       </button>
     </div>
 
-    <div class="loading-spinner" id="loading-state" style="display: none;">
-      <div class="spinner"></div>
-      Loading transactions...
+    <!-- Transactions Container -->
+    <div id="transactions-container">
+      <!-- Sunday, August 2, 2020 -->
+      <div class="transaction-group">
+        <div class="group-header d-flex justify-content-between align-items-center">
+          <span class="group-date">Sunday, August 2, 2020</span>
+          <span class="group-total">₱2390.99</span>
+        </div>
+        
+        <div class="transaction-card d-flex justify-content-between align-items-start">
+          <div class="transaction-details flex-grow-1">
+            <div class="transaction-name">Andrea Austero</div>
+            <div class="transaction-info">10:00 AM - Sales Invoice</div>
+          </div>
+          <div class="transaction-actions d-flex gap-2 align-items-center">
+            <button class="transaction__badge transaction__badge--cash btn">Cash</button>
+            <button class="transaction__badge transaction__badge--paid btn">PAID</button>
+          </div>
+        </div>
+
+        <div class="transaction-card d-flex justify-content-between align-items-start">
+          <div class="transaction-details flex-grow-1">
+            <div class="transaction-name">Andrea Austero</div>
+            <div class="transaction-info">10:00 AM - Sales Invoice</div>
+          </div>
+          <div class="transaction-actions d-flex gap-2 align-items-center">
+            <button class="transaction__badge transaction__badge--cash btn">Cash</button>
+            <button class="transaction__badge transaction__badge--paid btn">PAID</button>
+          </div>
+        </div>
+
+        <div class="transaction-card d-flex justify-content-between align-items-start">
+          <div class="transaction-details flex-grow-1">
+            <div class="transaction-name">Andrea Austero</div>
+            <div class="transaction-info">10:00 AM - Sales Invoice</div>
+          </div>
+          <div class="transaction-actions d-flex gap-2 align-items-center">
+            <button class="transaction__badge transaction__badge--cash btn">Cash</button>
+            <button class="transaction__badge transaction__badge--paid btn">PAID</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Saturday, August 3, 2020 -->
+      <div class="transaction-group">
+        <div class="group-header d-flex justify-content-between align-items-center">
+          <span class="group-date">Saturday, August 3, 2020</span>
+          <span class="group-total">₱1190.99</span>
+        </div>
+        
+        <div class="transaction-card d-flex justify-content-between align-items-start">
+          <div class="transaction-details flex-grow-1">
+            <div class="transaction-name">Andrea Austero</div>
+            <div class="transaction-info">10:00 AM - Sales Invoice</div>
+          </div>
+          <div class="transaction-actions d-flex gap-2 align-items-center">
+            <button class="transaction__badge transaction__badge--cash btn">Cash</button>
+            <button class="transaction__badge transaction__badge--paid btn">PAID</button>
+          </div>
+        </div>
+
+        <div class="transaction-card d-flex justify-content-between align-items-start">
+          <div class="transaction-details flex-grow-1">
+            <div class="transaction-name">Andrea Austero</div>
+            <div class="transaction-info">10:00 AM - Sales Invoice</div>
+          </div>
+          <div class="transaction-actions d-flex gap-2 align-items-center">
+            <button class="transaction__badge transaction__badge--cash btn">Cash</button>
+            <button class="transaction__badge transaction__badge--paid btn">PAID</button>
+          </div>
+        </div>
+
+        <div class="transaction-card d-flex justify-content-between align-items-start">
+          <div class="transaction-details flex-grow-1">
+            <div class="transaction-name">Andrea Austero</div>
+            <div class="transaction-info">10:00 AM - Sales Invoice</div>
+          </div>
+          <div class="transaction-actions d-flex gap-2 align-items-center">
+            <button class="transaction__badge transaction__badge--cash btn">Cash</button>
+            <button class="transaction__badge transaction__badge--paid btn">PAID</button>
+          </div>
+        </div>
+      </div>
     </div>
 
-    <div id="transactions-container"></div>
+    <!-- Filter Modal -->
+    <div id="filterModal" class="filter-modal">
+      <div class="filter-modal__dialog">
+        <div class="filter-modal__header d-flex justify-content-between align-items-center border-bottom">
+          <h2 class="filter-modal__title mb-0">Reset</h2>
+          <button class="filter-modal__close btn btn-link p-0" onclick="closeFilterModal()">
+            <i class="bi bi-x"></i>
+          </button>
+        </div>
 
-    <div class="empty-state" id="empty-state" style="display: none;">
-      <div class="empty-icon">
-        <i class="bi bi-receipt"></i>
+        <div class="filter-modal__body">
+          <div class="filter-modal__option mb-3">
+            <label class="filter-modal__radio d-flex align-items-center position-relative">
+              <input type="radio" name="dateFilter" value="90days" checked class="position-absolute opacity-0">
+              <span class="filter-modal__radio-text flex-grow-1">in the last 90 days</span>
+              <span class="filter-modal__radio-indicator"></span>
+            </label>
+          </div>
+
+          <div class="filter-modal__option mb-3">
+            <label class="filter-modal__radio d-flex align-items-center position-relative">
+              <input type="radio" name="dateFilter" value="custom" class="position-absolute opacity-0">
+              <span class="filter-modal__radio-text flex-grow-1">Choose the date</span>
+              <span class="filter-modal__radio-indicator"></span>
+            </label>
+          </div>
+
+          <div class="filter-modal__date-range" id="dateRangeSection">
+            <div class="row g-3">
+              <div class="col-6">
+                <div class="filter-modal__input-group d-flex flex-column">
+                  <label class="filter-modal__label">Starting from</label>
+                  <input type="date" class="filter-modal__input form-control" id="startDate">
+                </div>
+              </div>
+
+              <div class="col-6">
+                <div class="filter-modal__input-group d-flex flex-column">
+                  <label class="filter-modal__label">Until</label>
+                  <input type="date" class="filter-modal__input form-control" id="endDate">
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="filter-modal__footer">
+          <button class="filter-modal__submit btn w-100" onclick="applyFilter()">Filter</button>
+        </div>
       </div>
-      <div class="empty-title">No Transactions Found</div>
-      <div class="empty-subtitle">Your transaction history will appear here</div>
     </div>
   </div>
 </div>
@@ -44,6 +164,11 @@
 
 @section('css')
 <style>
+  .transaction-history-page {
+    background: #F7F8FA;
+    min-height: 100vh;
+  }
+
   .back-btn {
     background: none;
     border: none;
@@ -52,6 +177,7 @@
     cursor: pointer;
     padding: 5px;
     transition: color 0.2s ease;
+    text-decoration: none;
   }
 
   .back-btn:hover {
@@ -72,13 +198,17 @@
   .page-title {
     font-size: 20px;
     font-weight: 600;
-    color: #333;
+    color: #4A90E2;
     margin: 0;
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
   }
 
   .filter-section {
     background: #fff;
     margin-top: -9px;
+    margin-bottom: 15px;
   }
 
   .filter-btn {
@@ -94,6 +224,7 @@
     color: #333;
     font-weight: 500;
     transition: background-color 0.2s ease;
+    text-align: left;
   }
 
   .filter-btn:hover {
@@ -106,177 +237,335 @@
     gap: 10px;
   }
 
-  .transaction-group {
+  /* Filter Modal Styles */
+  .filter-modal {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.5);
+    z-index: 9999 !important;
+    align-items: flex-end;
+    justify-content: center;
+  }
+
+  .filter-modal.active {
+    display: flex;
+  }
+
+  .filter-modal__dialog {
     background: #fff;
-    margin: 15px;
-    border-radius: 12px;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
-    overflow: hidden;
+    border-radius: 20px 20px 0 0;
+    width: 100%;
+    max-width: 500px;
+    animation: slideUP 0.3s ease-out;
   }
 
-  .group-header {
-    padding: 15px 20px;
-    background: #f8f9fa;
-    border-bottom: 1px solid #e1e8ed;
+  @keyframes slideUP {
+    from {
+      transform: translateY(100%);
+    }
+    to {
+      transform: translateY(0);
+    }
+  }
+
+  .filter-modal__header {
     display: flex;
     justify-content: space-between;
     align-items: center;
+    padding: 20px 24px;
+    border-bottom: 1px solid #e8e8e8;
   }
 
-  .group-date {
-    font-size: 14px;
+  .filter-modal__title {
+    font-size: 20px;
     font-weight: 600;
-    color: #666;
+    color: #2c3e50;
+    margin: 0;
   }
 
-  .group-total {
-    font-size: 14px;
-    font-weight: 700;
-    color: #4A90E2;
-  }
-
-  .transaction-item {
-    padding: 20px;
-    border-bottom: 1px solid #f5f5f5;
+  .filter-modal__close {
+    background: none;
+    border: none;
+    font-size: 28px;
+    color: #2c3e50;
+    cursor: pointer;
+    padding: 0;
+    width: 32px;
+    height: 32px;
     display: flex;
-    justify-content: space-between;
     align-items: center;
-    transition: background-color 0.2s ease;
+    justify-content: center;
+    transition: color 0.2s ease;
+    text-decoration: none;
+  }
+
+  .filter-modal__close:hover {
+    color: #7f8c8d;
+  }
+
+  .filter-modal__body {
+    padding: 24px;
+  }
+
+  .filter-modal__option {
+    margin-bottom: 20px;
+  }
+
+  .filter-modal__radio {
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+    position: relative;
+    font-size: 16px;
+    color: #2c3e50;
+    padding: 4px 0;
+  }
+
+  .filter-modal__radio input[type="radio"] {
+    position: absolute;
+    opacity: 0;
     cursor: pointer;
   }
 
-  .transaction-item:last-child {
-    border-bottom: none;
+  .filter-modal__radio-text {
+    flex: 1;
+    font-weight: 400;
   }
 
-  .transaction-item:hover {
+  .filter-modal__radio-indicator {
+    width: 24px;
+    height: 24px;
+    border: 2px solid #d1d5db;
+    border-radius: 50%;
+    position: relative;
+    transition: all 0.2s ease;
+  }
+
+  .filter-modal__radio input[type="radio"]:checked ~ .filter-modal__radio-indicator {
+    border-color: #5dade2;
+    background: #fff;
+  }
+
+  .filter-modal__radio input[type="radio"]:checked ~ .filter-modal__radio-indicator::after {
+    content: '';
+    position: absolute;
+    width: 12px;
+    height: 12px;
+    background: #5dade2;
+    border-radius: 50%;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+  }
+
+  .filter-modal__date-range {
+    margin-top: 20px;
+    opacity: 0.5;
+    pointer-events: none;
+    transition: opacity 0.2s ease;
+  }
+
+  .filter-modal__date-range.active {
+    opacity: 1;
+    pointer-events: auto;
+  }
+
+  .filter-modal__input {
     background: #f8f9fa;
+    border: none;
+    border-radius: 8px;
+    padding: 12px 14px;
+    font-size: 14px;
+    color: #2c3e50;
+    font-weight: 500;
+    cursor: pointer;
+    width: 100%;
+  }
+
+  .filter-modal__input:focus {
+    outline: 2px solid #5dade2;
+    outline-offset: 0;
+    box-shadow: none;
+    background: #f8f9fa;
+  }
+
+  .filter-modal__input-group {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .filter-modal__label {
+    font-size: 13px;
+    color: #95a5a6;
+    margin-bottom: 8px;
+    font-weight: 400;
+  }
+
+  .filter-modal__footer {
+    padding: 16px 24px 24px;
+  }
+
+  .filter-modal__submit {
+    width: 100%;
+    background: #5dade2;
+    color: #fff;
+    border: none;
+    border-radius: 10px;
+    padding: 16px;
+    font-size: 16px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background 0.2s ease;
+  }
+
+  .filter-modal__submit:hover {
+    background: #3498db;
+  }
+
+  @media (max-width: 480px) {
+    .filter-modal__dialog {
+      max-width: 100%;
+    }
+  }
+
+  .transaction-group {
+    margin-bottom: 25px;
+    padding: 0 20px;
+  }
+
+  .group-header {
+    padding: 15px 0;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 0px;
+  }
+
+  .group-date {
+    font-size: 15px;
+    font-weight: 600;
+    color: #2c3e50;
+  }
+
+  .group-total {
+    font-size: 18px;
+    font-weight: 700;
+    color: #2c3e50;
+  }
+
+  .transaction-card {
+    background: #fff;
+    padding: 24px 20px;
+    border-radius: 12px;
+    margin-bottom: 15px;
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.08);
+    transition: all 0.2s ease;
+  }
+
+  .transaction-card:hover {
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.12);
+    transform: translateY(-2px);
   }
 
   .transaction-details {
     flex-grow: 1;
   }
 
-  .transaction-amount {
+  .transaction-name {
     font-size: 18px;
     font-weight: 700;
-    color: #333;
-    margin-bottom: 4px;
+    color: #2c3e50;
+    margin-bottom: 6px;
   }
 
   .transaction-info {
-    font-size: 13px;
-    color: #666;
+    font-size: 14px;
+    color: #7f8c8d;
+    font-weight: 400;
   }
 
-  .transaction-status {
+  .transaction-actions {
     display: flex;
-    flex-direction: column;
-    align-items: flex-end;
-    gap: 8px;
+    gap: 10px;
+    align-items: center;
   }
 
-  .status-badge {
-    padding: 6px 12px;
-    border-radius: 20px;
-    font-size: 12px;
+  /* Transaction Badge Styles */
+  .transaction__badge {
+    padding: 10px 24px;
+    border: none;
+    border-radius: 8px;
+    font-size: 14px;
     font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    text-transform: capitalize;
+    min-width: 80px;
+  }
+
+  .transaction__badge--cash {
+    background: #5dade2;
+    color: #fff;
+  }
+
+  .transaction__badge--cash:hover {
+    background: #3498db !important;
+  }
+
+  .transaction__badge--paid {
+    background: #e74c3c;
+    color: #fff;
     text-transform: uppercase;
   }
 
-  .status-paid {
-    background: #e8f5e8;
-    color: #28a745;
-  }
-
-  .status-pending {
-    background: #fff3cd;
-    color: #856404;
-  }
-
-  .status-failed {
-    background: #f8d7da;
-    color: #721c24;
-  }
-
-  .status-refunded {
-    background: #e2e3e5;
-    color: #6c757d;
-  }
-
-  .empty-state {
-    background: #fff;
-    margin: 15px;
-    border-radius: 12px;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
-    padding: 60px 20px;
-    text-align: center;
-  }
-
-  .empty-icon {
-    font-size: 48px;
-    color: #ccc;
-    margin-bottom: 16px;
-  }
-
-  .empty-title {
-    font-size: 18px;
-    font-weight: 600;
-    color: #666;
-    margin-bottom: 8px;
-    font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
-  }
-
-  .empty-subtitle {
-    font-size: 14px;
-    color: #999;
-    font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
-  }
-
-  .loading-spinner {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    padding: 40px;
-    font-size: 16px;
-    color: #666;
-    font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
-  }
-
-  .spinner {
-    width: 24px;
-    height: 24px;
-    border: 3px solid #f3f3f3;
-    border-top: 3px solid #4A90E2;
-    border-radius: 50%;
-    animation: spin 1s linear infinite;
-    margin-right: 12px;
-  }
-
-  @keyframes spin {
-    0% { transform: rotate(0deg); }
-    100% { transform: rotate(360deg); }
+  .transaction__badge--paid:hover {
+    background: #c0392b !important;
   }
 
   @media (max-width: 480px) {
     .transaction-group {
-      margin: 10px;
+      padding: 0 15px;
+    }
+
+    .transaction-card {
+      padding: 18px 16px;
+      position: relative;
     }
     
-    .transaction-item {
-      padding: 16px;
+    .transaction-details {
+      width: calc(100% - 180px);
+      padding-right: 10px;
+    }
+
+    .transaction-actions {
+      position: absolute;
+      top: 18px;
+      right: 16px;
+    }
+
+    .transaction__badge {
+      padding: 8px 20px;
+      font-size: 13px;
+      min-width: 70px;
     }
     
-    .transaction-amount {
+    .transaction-name {
       font-size: 16px;
     }
     
     .transaction-info {
-      font-size: 12px;
+      font-size: 13px;
     }
     
     .group-header {
-      padding: 12px 16px;
+      padding: 12px 0;
     }
     
     .page-header-nya {
@@ -286,371 +575,54 @@
     .page-title {
       font-size: 18px;
     }
-  }
 
-  .pull-refresh {
-    padding: 20px;
-    text-align: center;
-    color: #4A90E2;
-    font-size: 14px;
-    font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
-    background: #f8f9fa;
-    margin: 15px;
-    border-radius: 8px;
-    display: none;
-  }
+    .group-date {
+      font-size: 14px;
+    }
 
-  .pull-refresh.active {
-    display: block;
+    .group-total {
+      font-size: 16px;
+    }
   }
 </style>
-@endsection
 
-@section('js')
 <script>
-document.addEventListener('DOMContentLoaded', function() {
-    let transactions = [];
-    let filteredTransactions = [];
-    
-    // Initialize the page
-    loadTransactions();
-    
-    // Load transactions from localStorage or generate sample data
-    function loadTransactions() {
-        showLoading();
-        
-        // Simulate API call delay
-        setTimeout(() => {
-            try {
-                // Try to load from localStorage first
-                const savedTransactions = localStorage.getItem('transactionHistory');
-                if (savedTransactions) {
-                    transactions = JSON.parse(savedTransactions);
-                } else {
-                    // Generate sample data if none exists
-                    transactions = generateSampleTransactions();
-                    localStorage.setItem('transactionHistory', JSON.stringify(transactions));
-                }
-                
-                filteredTransactions = [...transactions];
-                displayTransactions();
-                hideLoading();
-            } catch (error) {
-                console.error('Error loading transactions:', error);
-                showEmptyState();
-                hideLoading();
-            }
-        }, 1000);
-    }
-    
-    // Generate sample transaction data
-    function generateSampleTransactions() {
-        const sampleData = [
-            {
-                id: 'TRX010121113',
-                amount: 320.99,
-                time: '10:00 AM',
-                date: '2024-08-02',
-                status: 'paid',
-                type: 'sale',
-                customer: 'Walk-in Customer'
-            },
-            {
-                id: 'TRX010121114',
-                amount: 520.99,
-                time: '05:00 PM',
-                date: '2024-08-02',
-                status: 'paid',
-                type: 'sale',
-                customer: 'Online Order'
-            },
-            {
-                id: 'TRX010121115',
-                amount: 420.99,
-                time: '09:00 PM',
-                date: '2024-08-02',
-                status: 'paid',
-                type: 'sale',
-                customer: 'Walk-in Customer'
-            },
-            {
-                id: 'TRX010121116',
-                amount: 120.99,
-                time: '11:00 AM',
-                date: '2024-08-03',
-                status: 'paid',
-                type: 'sale',
-                customer: 'Walk-in Customer'
-            },
-            {
-                id: 'TRX010121117',
-                amount: 520.99,
-                time: '10:00 AM',
-                date: '2024-08-03',
-                status: 'paid',
-                type: 'sale',
-                customer: 'Online Order'
-            },
-            {
-                id: 'TRX010121118',
-                amount: 620.99,
-                time: '08:00 AM',
-                date: '2024-08-03',
-                status: 'paid',
-                type: 'sale',
-                customer: 'Walk-in Customer'
-            }
-        ];
-        
-        return sampleData;
-    }
-    
-    // Group transactions by date
-    function groupTransactionsByDate(transactions) {
-        const groups = {};
-        
-        transactions.forEach(transaction => {
-            const date = transaction.date;
-            if (!groups[date]) {
-                groups[date] = [];
-            }
-            groups[date].push(transaction);
-        });
-        
-        return groups;
-    }
-    
-    // Format date for display
-    function formatDate(dateString) {
-        const date = new Date(dateString);
-        const options = { 
-            weekday: 'long', 
-            year: 'numeric', 
-            month: 'long', 
-            day: 'numeric' 
-        };
-        return date.toLocaleDateString('en-US', options);
-    }
-    
-    // Calculate daily total
-    function calculateDailyTotal(dayTransactions) {
-        return dayTransactions.reduce((sum, transaction) => sum + transaction.amount, 0);
-    }
-    
-    // Get status badge HTML
-    function getStatusBadge(status) {
-        const statusMap = {
-            'paid': { class: 'status-paid', text: 'PAID' },
-            'pending': { class: 'status-pending', text: 'PENDING' },
-            'failed': { class: 'status-failed', text: 'FAILED' },
-            'refunded': { class: 'status-refunded', text: 'REFUNDED' }
-        };
-        
-        const statusInfo = statusMap[status] || statusMap['paid'];
-        return `<span class="status-badge ${statusInfo.class}">${statusInfo.text}</span>`;
-    }
-    
-    // Display transactions
-    function displayTransactions() {
-        const container = document.getElementById('transactions-container');
-        
-        if (filteredTransactions.length === 0) {
-            showEmptyState();
-            return;
+  function openFilterModal() {
+    document.getElementById('filterModal').classList.add('active');
+    document.body.style.overflow = 'hidden';
+  }
+
+  function closeFilterModal() {
+    document.getElementById('filterModal').classList.remove('active');
+    document.body.style.overflow = '';
+  }
+
+  function applyFilter() {
+    console.log('Filter applied');
+    closeFilterModal();
+  }
+
+  // Handle radio button changes
+  document.addEventListener('DOMContentLoaded', function() {
+    const radioButtons = document.querySelectorAll('input[name="dateFilter"]');
+    const dateRangeSection = document.getElementById('dateRangeSection');
+
+    radioButtons.forEach(radio => {
+      radio.addEventListener('change', function() {
+        if (this.value === 'custom') {
+          dateRangeSection.classList.add('active');
+        } else {
+          dateRangeSection.classList.remove('active');
         }
-        
-        hideEmptyState();
-        
-        const groupedTransactions = groupTransactionsByDate(filteredTransactions);
-        let html = '';
-        
-        // Sort dates in descending order (newest first)
-        const sortedDates = Object.keys(groupedTransactions).sort((a, b) => new Date(b) - new Date(a));
-        
-        sortedDates.forEach(date => {
-            const dayTransactions = groupedTransactions[date];
-            const dailyTotal = calculateDailyTotal(dayTransactions);
-            
-            html += `
-                <div class="transaction-group">
-                    <div class="group-header">
-                        <span class="group-date">${formatDate(date)}</span>
-                        <span class="group-total">₱${dailyTotal.toFixed(2)}</span>
-                    </div>
-            `;
-            
-            // Sort transactions by time (newest first)
-            dayTransactions.sort((a, b) => {
-                const timeA = convertTimeToMinutes(a.time);
-                const timeB = convertTimeToMinutes(b.time);
-                return timeB - timeA;
-            });
-            
-            dayTransactions.forEach(transaction => {
-                html += `
-                    <div class="transaction-item" onclick="viewTransactionDetails('${transaction.id}')">
-                        <div class="transaction-details">
-                            <div class="transaction-amount">₱ ${transaction.amount.toFixed(2)}</div>
-                            <div class="transaction-info">${transaction.time} - #${transaction.id}</div>
-                        </div>
-                        <div class="transaction-status">
-                            ${getStatusBadge(transaction.status)}
-                        </div>
-                    </div>
-                `;
-            });
-            
-            html += '</div>';
-        });
-        
-        container.innerHTML = html;
-    }
-    
-    // Convert time string to minutes for sorting
-    function convertTimeToMinutes(timeString) {
-        const [time, period] = timeString.split(' ');
-        const [hours, minutes] = time.split(':').map(Number);
-        
-        let totalMinutes = hours * 60 + minutes;
-        if (period === 'PM' && hours !== 12) {
-            totalMinutes += 12 * 60;
-        } else if (period === 'AM' && hours === 12) {
-            totalMinutes -= 12 * 60;
-        }
-        
-        return totalMinutes;
-    }
-    
-    // Show/hide loading state
-    function showLoading() {
-        document.getElementById('loading-state').style.display = 'flex';
-        document.getElementById('transactions-container').style.display = 'none';
-        document.getElementById('empty-state').style.display = 'none';
-    }
-    
-    function hideLoading() {
-        document.getElementById('loading-state').style.display = 'none';
-        document.getElementById('transactions-container').style.display = 'block';
-    }
-    
-    // Show/hide empty state
-    function showEmptyState() {
-        document.getElementById('empty-state').style.display = 'block';
-        document.getElementById('transactions-container').style.display = 'none';
-    }
-    
-    function hideEmptyState() {
-        document.getElementById('empty-state').style.display = 'none';
-    }
-    
-    // View transaction details
-    window.viewTransactionDetails = function(transactionId) {
-        const transaction = transactions.find(t => t.id === transactionId);
-        if (transaction) {
-            // Store transaction data for details page
-            localStorage.setItem('selectedTransaction', JSON.stringify(transaction));
-            
-            // You can redirect to a transaction details page here
-            // window.location.href = `/transaction-details/${transactionId}`;
-            
-            // For now, show an alert with transaction info
-            alert(`Transaction Details:\n\nID: ${transaction.id}\nAmount: ₱${transaction.amount.toFixed(2)}\nDate: ${formatDate(transaction.date)}\nTime: ${transaction.time}\nStatus: ${transaction.status.toUpperCase()}\nCustomer: ${transaction.customer}`);
-        }
-    };
-    
-    // Filter functionality
-    window.toggleDateFilter = function() {
-        // For now, show a simple filter option
-        const filterOptions = ['All Time', 'Today', 'This Week', 'This Month', 'Last 30 Days'];
-        
-        const selectedOption = prompt('Select filter option:\n' + filterOptions.map((option, index) => `${index + 1}. ${option}`).join('\n'));
-        
-        if (selectedOption && selectedOption >= 1 && selectedOption <= filterOptions.length) {
-            applyDateFilter(filterOptions[selectedOption - 1]);
-        }
-    };
-    
-    // Apply date filter
-    function applyDateFilter(filterType) {
-        const now = new Date();
-        let filteredData = [...transactions];
-        
-        switch (filterType) {
-            case 'Today':
-                const today = now.toISOString().split('T')[0];
-                filteredData = transactions.filter(t => t.date === today);
-                break;
-            case 'This Week':
-                const weekStart = new Date(now.setDate(now.getDate() - now.getDay()));
-                filteredData = transactions.filter(t => new Date(t.date) >= weekStart);
-                break;
-            case 'This Month':
-                const monthStart = new Date(now.getFullYear(), now.getMonth(), 1);
-                filteredData = transactions.filter(t => new Date(t.date) >= monthStart);
-                break;
-            case 'Last 30 Days':
-                const thirtyDaysAgo = new Date(now.getTime() - (30 * 24 * 60 * 60 * 1000));
-                filteredData = transactions.filter(t => new Date(t.date) >= thirtyDaysAgo);
-                break;
-            default:
-                filteredData = [...transactions];
-        }
-        
-        filteredTransactions = filteredData;
-        displayTransactions();
-    }
-    
-    // Pull to refresh functionality
-    let startY = 0;
-    let isPulling = false;
-    
-    document.addEventListener('touchstart', function(e) {
-        startY = e.touches[0].pageY;
+      });
     });
-    
-    document.addEventListener('touchmove', function(e) {
-        const currentY = e.touches[0].pageY;
-        const pullDistance = currentY - startY;
-        
-        if (pullDistance > 50 && window.scrollY === 0 && !isPulling) {
-            isPulling = true;
-            document.getElementById('pull-refresh').classList.add('active');
-        }
+
+    // Close modal when clicking outside
+    document.getElementById('filterModal').addEventListener('click', function(e) {
+      if (e.target === this) {
+        closeFilterModal();
+      }
     });
-    
-    document.addEventListener('touchend', function(e) {
-        if (isPulling) {
-            isPulling = false;
-            document.getElementById('pull-refresh').classList.remove('active');
-            
-            // Refresh data
-            loadTransactions();
-        }
-    });
-    
-    // Add some completed orders to transaction history if they exist
-    const completedOrders = JSON.parse(localStorage.getItem('completedOrders') || '[]');
-    if (completedOrders.length > 0) {
-        // Convert completed orders to transaction format
-        const orderTransactions = completedOrders.map(order => ({
-            id: order.order_id.replace('#', '').replace('ORD-', 'TRX'),
-            amount: order.total_amount,
-            time: new Date(order.completed_at).toLocaleTimeString('en-US', { 
-                hour: 'numeric', 
-                minute: '2-digit',
-                hour12: true 
-            }),
-            date: new Date(order.completed_at).toISOString().split('T')[0],
-            status: 'paid',
-            type: 'sale',
-            customer: order.payment_method === 'gcash' ? 'GCash Payment' : 'Cash Payment'
-        }));
-        
-        // Merge with existing transactions
-        transactions = [...transactions, ...orderTransactions];
-        localStorage.setItem('transactionHistory', JSON.stringify(transactions));
-        filteredTransactions = [...transactions];
-    }
-});
+  });
 </script>
 @endsection
